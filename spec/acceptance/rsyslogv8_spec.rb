@@ -17,12 +17,6 @@ describe 'rsyslogv8' do
 
       apply_manifest(pp, :catch_changes => true)
     end
-    it 'should idempotently run bis' do
-      pp = <<-EOS
-        class { 'rsyslogv8': }
-      EOS
-      apply_manifest(pp, :catch_changes => true)
-    end
   end
 end
 
