@@ -1,0 +1,5 @@
+fixtures:
+  forge_modules:
+    apt: 'puppetlabs-apt'
+  symlinks:
+    rsyslogv8: "#{source_dir}"
