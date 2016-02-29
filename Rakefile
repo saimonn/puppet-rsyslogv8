@@ -10,11 +10,7 @@ end
 
 PuppetSyntax.exclude_paths = ["spec/fixtures/**/*.pp", "vendor/**/*"]
 
-desc "Lint metadata.json file"
-Rake::Task[:metadata].clear
-task :metadata do
-  sh "metadata-json-lint metadata.json --no-strict-license"
-end
+MetadataJsonLint::options[:strict_license] = false
 
 # Publishing tasks
 unless RUBY_VERSION =~ /^1\./
