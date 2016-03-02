@@ -14,6 +14,14 @@ class rsyslogv8::params {
       $_family_relp_package_name    = undef
       $_family_rsyslog_package_name = undef
       $_family_gnutls_package_name  = undef
+      $_family_run_user             = undef
+      $_family_run_group            = undef
+      $_family_spool_dir            = undef
+      $_family_modules              = undef
+      $_family_perm_dir             = '0755'
+      $_family_perm_file            = '0640'
+      $_family_umask                = undef
+      $_family_omit_local_logging   = undef
       case $::operatingsystem {
         'Debian': {
           $_os_family_manage_repo          = true
@@ -28,6 +36,14 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_run_user             = undef
+          $_os_family_run_group            = undef
+          $_os_family_spool_dir            = undef
+          $_os_family_modules              = undef
+          $_os_family_perm_dir             = undef
+          $_os_family_perm_file            = undef
+          $_os_family_omit_local_logging   = undef
+          $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
             '6': {
@@ -36,6 +52,14 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             '7': {
               $_version_os_family_manage_repo          = undef
@@ -43,6 +67,14 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = false
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             '8': {
               $_version_os_family_manage_repo          = false
@@ -50,6 +82,14 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -69,6 +109,14 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_run_user             = 'syslog'
+          $_os_family_run_group            = 'syslog'
+          $_os_family_spool_dir            = undef
+          $_os_family_modules              = undef
+          $_os_family_perm_dir             = undef
+          $_os_family_perm_file            = undef
+          $_os_family_omit_local_logging   = undef
+          $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
             '14.04': {
@@ -77,6 +125,14 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             '15.04', '15.10': {
               $_version_os_family_manage_repo          = undef
@@ -84,6 +140,14 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = false
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -101,6 +165,14 @@ class rsyslogv8::params {
       $_family_relp_package_name    = undef
       $_family_rsyslog_package_name = undef
       $_family_gnutls_package_name  = undef
+      $_family_run_user             = undef
+      $_family_run_group            = undef
+      $_family_spool_dir            = '/var/lib/rsyslog'
+      $_family_modules              = undef
+      $_family_perm_dir             = undef
+      $_family_perm_file            = undef
+      $_family_umask                = '0000'
+      $_family_omit_local_logging   = undef
 
       case $::operatingsystem {
         'Redhat', 'CentOS': {
@@ -116,14 +188,48 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_run_user             = undef
+          $_os_family_run_group            = undef
+          $_os_family_spool_dir            = undef
+          $_os_family_modules              = undef
+          $_os_family_perm_dir             = undef
+          $_os_family_perm_file            = undef
+          $_os_family_omit_local_logging   = undef
+          $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
-            '5', '6', '7': {
+            '5', '6': {
               $_version_os_family_manage_repo          = undef
               $_version_os_family_repo_data            = undef
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
+            }
+            '7': {
+              $_version_os_family_manage_repo          = undef
+              $_version_os_family_repo_data            = undef
+              $_version_os_family_relp_package_name    = undef
+              $_version_os_family_rsyslog_package_name = undef
+              $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = {
+                                        'imuxsock' => { 'comment' => 'provides support for local system logging' },
+                                        'imjournal'   => { 'comment' => 'provides access to the systemd journal' },
+              }
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_omit_local_logging   = undef
+              $_version_os_family_umask                = undef
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -140,35 +246,100 @@ class rsyslogv8::params {
     }
   }
 
-  $manage_repo          = pick(
-                            $::rsyslogv8::params::_version_os_family_manage_repo,
-                            $::rsyslogv8::params::_os_family_manage_repo,
-                            $::rsyslogv8::params::_family_manage_repo,
-                            false
-                          )
-  $repo_data            = pick(
-                            $::rsyslogv8::params::_version_os_family_repo_data,
-                            $::rsyslogv8::params::_os_family_repo_data,
-                            $::rsyslogv8::params::_family_repo_data,
-                            {}
-                          )
-  $rsyslog_package_name = pick(
-                            $::rsyslogv8::params::_version_os_family_rsyslog_package_name,
-                            $::rsyslogv8::params::_os_family_rsyslog_package_name,
-                            $::rsyslogv8::params::_family_rsyslog_package_name,
-                            'rsyslog'
-                          )
-  $gnutls_package_name  = pick(
-                            $::rsyslogv8::params::_version_os_family_gnutls_package_name,
-                            $::rsyslogv8::params::_os_family_gnutls_package_name,
-                            $::rsyslogv8::params::_family_gnutls_package_name,
-                            'rsyslog-gnutls'
-                          )
-  $relp_package_name    = pick(
-                            $::rsyslogv8::params::_version_os_family_relp_package_name,
-                            $::rsyslogv8::params::_os_family_relp_package_name,
-                            $::rsyslogv8::params::_family_relp_package_name,
-                            'rsyslog-relp'
-                          )
-  $package_status       = 'latest'
+  $manage_repo                    = pick(
+                                      $::rsyslogv8::params::_version_os_family_manage_repo,
+                                      $::rsyslogv8::params::_os_family_manage_repo,
+                                      $::rsyslogv8::params::_family_manage_repo,
+                                      false
+                                    )
+  $repo_data                      = pick(
+                                      $::rsyslogv8::params::_version_os_family_repo_data,
+                                      $::rsyslogv8::params::_os_family_repo_data,
+                                      $::rsyslogv8::params::_family_repo_data,
+                                      {}
+                                    )
+  $rsyslog_package_name           = pick(
+                                      $::rsyslogv8::params::_version_os_family_rsyslog_package_name,
+                                      $::rsyslogv8::params::_os_family_rsyslog_package_name,
+                                      $::rsyslogv8::params::_family_rsyslog_package_name,
+                                      'rsyslog'
+                                    )
+  $gnutls_package_name            = pick(
+                                      $::rsyslogv8::params::_version_os_family_gnutls_package_name,
+                                      $::rsyslogv8::params::_os_family_gnutls_package_name,
+                                      $::rsyslogv8::params::_family_gnutls_package_name,
+                                      'rsyslog-gnutls'
+                                    )
+  $relp_package_name              = pick(
+                                      $::rsyslogv8::params::_version_os_family_relp_package_name,
+                                      $::rsyslogv8::params::_os_family_relp_package_name,
+                                      $::rsyslogv8::params::_family_relp_package_name,
+                                      'rsyslog-relp'
+                                    )
+  $run_user                       = pick(
+                                      $::rsyslogv8::params::_version_os_family_run_user,
+                                      $::rsyslogv8::params::_os_family_run_user,
+                                      $::rsyslogv8::params::_family_run_user,
+                                      'root'
+                                    )
+  $run_group                      = pick(
+                                      $::rsyslogv8::params::_version_os_family_run_group,
+                                      $::rsyslogv8::params::_os_family_run_group,
+                                      $::rsyslogv8::params::_family_run_group,
+                                      'root'
+                                    )
+  $spool_dir                      = pick(
+                                      $::rsyslogv8::params::_version_os_family_spool_dir,
+                                      $::rsyslogv8::params::_os_family_spool_dir,
+                                      $::rsyslogv8::params::_family_spool_dir,
+                                      '/var/spool/rsyslog/'
+                                    )
+  $modules                        = pick(
+                                      $::rsyslogv8::params::_version_os_family_modules,
+                                      $::rsyslogv8::params::_os_family_modules,
+                                      $::rsyslogv8::params::_family_modules,
+                                      {
+                                        'imuxsock' => { 'comment' => 'provides support for local system logging' },
+                                        'imklog'   => { 'comment' => 'provides kernel logging support (previously done by rklogd)' },
+                                      }
+                                    )
+  $perm_dir                       = pick(
+                                      $::rsyslogv8::params::_version_os_family_perm_dir,
+                                      $::rsyslogv8::params::_os_family_perm_dir,
+                                      $::rsyslogv8::params::_family_perm_dir,
+                                      '0750'
+                                    )
+  $perm_file                      = pick(
+                                      $::rsyslogv8::params::_version_os_family_perm_file,
+                                      $::rsyslogv8::params::_os_family_perm_file,
+                                      $::rsyslogv8::params::_family_perm_file,
+                                      '0600'
+                                    )
+  $umask                          = pick(
+                                      $::rsyslogv8::params::_version_os_family_umask,
+                                      $::rsyslogv8::params::_os_family_umask,
+                                      $::rsyslogv8::params::_family_umask,
+                                      false
+                                    )
+  $omit_local_logging             = pick(
+                                      $::rsyslogv8::params::_version_os_family_omit_local_logging,
+                                      $::rsyslogv8::params::_os_family_omit_local_logging,
+                                      $::rsyslogv8::params::_family_omit_local_logging,
+                                      false
+                                    )
+  $package_status                 = 'latest'
+  $service_name                   = 'rsyslog'
+  $rsyslog_conf                   = '/etc/rsyslog.conf'
+  $rsyslog_d                      = '/etc/rsyslog.d'
+  $purge_rsyslog_d                = false
+  $preserve_fqdn                  = false
+  $local_host_name                = undef
+  $non_kernel_facility            = false
+  $max_message_size               = '2k'
+  $system_log_rate_limit_interval = '1'
+  $system_log_rate_limit_burst    = '100'
+  $default_template               = undef
+  $msg_reduction                  = false
+  $log_user                       = $::rsyslogv8::params::_family_run_user
+  $log_group                      = $::rsyslogv8::params::_family_run_group
 }
