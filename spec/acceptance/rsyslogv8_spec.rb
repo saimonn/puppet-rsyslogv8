@@ -6,6 +6,7 @@ describe 'rsyslogv8' do
     it 'should apply without error' do
       pp = <<-EOS
         class { 'rsyslogv8': }
+        class { 'rsyslogv8::config::local': }
       EOS
 
       apply_manifest(pp, :catch_failures => true)
@@ -13,6 +14,7 @@ describe 'rsyslogv8' do
     it 'should idempotently run' do
       pp = <<-EOS
         class { 'rsyslogv8': }
+        class { 'rsyslogv8::config::local': }
       EOS
 
       apply_manifest(pp, :catch_changes => true)
