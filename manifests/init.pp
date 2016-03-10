@@ -1,7 +1,7 @@
 class rsyslogv8 (
   $rsyslog_package_name           = $rsyslogv8::params::rsyslog_package_name,
-  $gnutls_package_name            = $rsyslogv8::params::relp_package_name,
-  $relp_package_name              = $rsyslogv8::params::gnutls_package_name,
+  $relp_package_name              = $rsyslogv8::params::relp_package_name,
+  $gnutls_package_name            = $rsyslogv8::params::gnutls_package_name,
   $manage_repo                    = $rsyslogv8::params::manage_repo,
   $repo_data                      = $rsyslogv8::params::repo_data,
   $package_status                 = $rsyslogv8::params::package_status,
@@ -12,33 +12,94 @@ class rsyslogv8 (
   $perm_dir                       = $rsyslogv8::params::perm_dir,
   $perm_file                      = $rsyslogv8::params::perm_file,
   $umask                          = $rsyslogv8::params::umask,
-  $omit_local_logging             = $rsyslogv8::params::omit_local_logging,
   $service_name                   = $rsyslogv8::params::service_name,
   $rsyslog_conf                   = $rsyslogv8::params::rsyslog_conf,
   $rsyslog_d                      = $rsyslogv8::params::rsyslog_d,
   $purge_rsyslog_d                = $rsyslogv8::params::purge_rsyslog_d,
   $preserve_fqdn                  = $rsyslogv8::params::preserve_fqdn,
   $local_host_name                = $rsyslogv8::params::local_host_name,
-  $non_kernel_facility            = $rsyslogv8::params::non_kernel_facility,
   $max_message_size               = $rsyslogv8::params::max_message_size,
-  $system_log_rate_limit_interval = $rsyslogv8::params::system_log_rate_limit_interval,
-  $system_log_rate_limit_burst    = $rsyslogv8::params::system_log_rate_limit_burst,
   $default_template               = $rsyslogv8::params::default_template,
-  $msg_reduction                  = $rsyslogv8::params::msg_reduction,
   $log_user                       = $rsyslogv8::params::log_user,
   $log_group                      = $rsyslogv8::params::log_group,
+  $ssl                            = false,
+  $ssl_ca                         = undef,
+  $ssl_cert                       = undef,
+  $ssl_key                        = undef,
 ) inherits rsyslogv8::params {
   if ! is_string($rsyslog_package_name) and $rsyslog_package_name != false {
     fail('parameter rsyslog_package_name must be a string or false')
   }
+  if ! is_string($perm_dir) {
+    fail('parameter perm_dir must be a string')
+  }
+  if ! is_string($perm_file) {
+    fail('parameter perm_file must be a string')
+  }
+  if $umask != false and ! is_string($umask) {
+    fail('parameter umask must be a string or false')
+  }
+  if ! is_string($run_user) {
+    fail('parameter run_user must be a string')
+  }
+  if ! is_string($service_name) {
+    fail('parameter service_name must be a string')
+  }
+  if ! is_string($run_group) {
+    fail('parameter run_group must be a string')
+  }
   if ! is_string($gnutls_package_name) and $gnutls_package_name != false {
     fail('parameter gnutls_package_name must be a string or false')
+  }
+  if ! is_hash($modules) {
+    fail('parameter modules must be a hash')
+  }
+  if ! is_bool($purge_rsyslog_d) {
+    fail('parameter purge_rsyslog_d must be a boolean')
+  }
+  if ! is_string($spool_dir) and ! is_absolute_path($spool_dir) {
+    fail('parameter spool_dir must be an absolute path')
+  }
+  if ! is_string($rsyslog_d) and ! is_absolute_path($rsyslog_d) {
+    fail('parameter rsyslog_d must be an absolute path')
+  }
+  if ! is_string($rsyslog_conf) and ! is_absolute_path($rsyslog_conf) {
+    fail('parameter rsyslog_conf must be an absolute path')
+  }
+  if ! is_bool($preserve_fqdn) {
+    fail('parameter preserve_fqdn must be a boolean')
   }
   if ! is_string($relp_package_name) and $relp_package_name != false {
     fail('parameter relp_package_name must be a string or false')
   }
+  if ! is_string($local_host_name) and ! is_domain_name($local_host_name) {
+    fail('parameter local_host_name must be a valid hostname')
+  }
+  if ! is_string($max_message_size) {
+    fail('parameter max_message_size must be a string')
+  }
+  if ! is_string($default_template) {
+    fail('parameter default_template must be a string')
+  }
+  if ! is_string($log_group) {
+    fail('parameter log_group must be a string')
+  }
+  if ! is_string($log_user) {
+    fail('parameter log_user must be a string')
+  }
   if ! is_bool($manage_repo) {
     fail('parameter manage_repo must be a boolean')
+  }
+  if ! is_bool($ssl) {
+    if ! is_string($ssl_ca) {
+      fail('parameter ssl must be a string (file source to the CA)')
+    }
+    if $ssl_cert != undef and ! is_string($ssl_cert) {
+      fail('parameter ssl_cert is set but is not a string (file source to the certificate)')
+    }
+    if $ssl_key != undef and ! is_string($ssl_key) {
+      fail('parameter ssl_key is set but is not a string (file source to the key)')
+    }
   }
   if ! is_hash($repo_data) {
     fail('parameter rsyslogv8::params::repo_data must be a hash')

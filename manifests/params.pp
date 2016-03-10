@@ -21,7 +21,6 @@ class rsyslogv8::params {
       $_family_perm_dir             = '0755'
       $_family_perm_file            = '0640'
       $_family_umask                = undef
-      $_family_omit_local_logging   = undef
       case $::operatingsystem {
         'Debian': {
           $_os_family_manage_repo          = true
@@ -42,7 +41,6 @@ class rsyslogv8::params {
           $_os_family_modules              = undef
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
-          $_os_family_omit_local_logging   = undef
           $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
@@ -58,7 +56,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             '7': {
@@ -73,7 +70,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             '8': {
@@ -88,7 +84,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             default: {
@@ -115,7 +110,6 @@ class rsyslogv8::params {
           $_os_family_modules              = undef
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
-          $_os_family_omit_local_logging   = undef
           $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
@@ -131,7 +125,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             '15.04', '15.10': {
@@ -146,7 +139,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             default: {
@@ -172,7 +164,6 @@ class rsyslogv8::params {
       $_family_perm_dir             = undef
       $_family_perm_file            = undef
       $_family_umask                = '0000'
-      $_family_omit_local_logging   = undef
 
       case $::operatingsystem {
         'Redhat', 'CentOS': {
@@ -194,7 +185,6 @@ class rsyslogv8::params {
           $_os_family_modules              = undef
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
-          $_os_family_omit_local_logging   = undef
           $_os_family_umask                = undef
 
           case $::operatingsystemmajrelease {
@@ -210,7 +200,6 @@ class rsyslogv8::params {
               $_version_os_family_modules              = undef
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             '7': {
@@ -223,12 +212,18 @@ class rsyslogv8::params {
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
               $_version_os_family_modules              = {
-                                        'imuxsock' => { 'comment' => 'provides support for local system logging' },
-                                        'imjournal'   => { 'comment' => 'provides access to the systemd journal' },
+                                        'imuxsock'    => {
+                                          'comment'   => 'provides support for local system logging',
+                                          'arguments' => [
+                                            { 'name'  => 'SysSock.Use',                'value' => 'off' },
+                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
+                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
+                                          ],
+                                        },
+                                        'imjournal' => { 'comment' => 'provides access to the systemd journal' },
               }
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
-              $_version_os_family_omit_local_logging   = undef
               $_version_os_family_umask                = undef
             }
             default: {
@@ -299,7 +294,13 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_os_family_modules,
                                       $::rsyslogv8::params::_family_modules,
                                       {
-                                        'imuxsock' => { 'comment' => 'provides support for local system logging' },
+                                        'imuxsock'    => {
+                                          'comment'   => 'provides support for local system logging',
+                                          'arguments' => [
+                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
+                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
+                                          ],
+                                        },
                                         'imklog'   => { 'comment' => 'provides kernel logging support (previously done by rklogd)' },
                                       }
                                     )
@@ -321,12 +322,6 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_family_umask,
                                       false
                                     )
-  $omit_local_logging             = pick(
-                                      $::rsyslogv8::params::_version_os_family_omit_local_logging,
-                                      $::rsyslogv8::params::_os_family_omit_local_logging,
-                                      $::rsyslogv8::params::_family_omit_local_logging,
-                                      false
-                                    )
   $package_status                 = 'latest'
   $service_name                   = 'rsyslog'
   $rsyslog_conf                   = '/etc/rsyslog.conf'
@@ -334,12 +329,8 @@ class rsyslogv8::params {
   $purge_rsyslog_d                = false
   $preserve_fqdn                  = false
   $local_host_name                = undef
-  $non_kernel_facility            = false
   $max_message_size               = '2k'
-  $system_log_rate_limit_interval = '1'
-  $system_log_rate_limit_burst    = '100'
   $default_template               = undef
-  $msg_reduction                  = false
   $log_user                       = $::rsyslogv8::params::_family_run_user
   $log_group                      = $::rsyslogv8::params::_family_run_group
 }
