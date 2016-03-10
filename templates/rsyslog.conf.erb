@@ -1,16 +1,41 @@
 # file is managed by puppet
-<% if scope.lookupvar('rsyslogv8::preserve_fqdn') -%>
-$PreserveFQDN on
+
+###########################
+#### GLOBAL DIRECTIVES ####
+###########################
+global(
+<% if scope.lookupvar('rsyslogv8::preserve_fqdn') %>
+ preserveFQDN="on"
 <% end -%>
-<% if scope.lookupvar('rsyslogv8::local_host_name') and scope.lookupvar('rsyslogv8::local_host_name') != :undef -%>
-$LocalHostName <%= scope.lookupvar('rsyslogv8::local_host_name') %>
+<% if scope.lookupvar('rsyslogv8::local_host_name') and scope.lookupvar('rsyslogv8::local_host_name') != :undef %>
+ localHostName="<%= scope.lookupvar('rsyslogv8::local_host_name') %>"
 <% end -%>
+ maxMessageSize="<%= scope.lookupvar('rsyslogv8::max_message_size') %>"
+ action.reportSuspension="on"
+ workDirectory="<%= scope.lookupvar('rsyslogv8::spool_dir') %>"
+<% if scope.lookupvar('rsyslogv8::ssl') and scope.lookupvar('rsyslogv8::ssl') != :undef %>
+ defaultNetStreamDriverCAFile="<%= scope.lookupvar('rsyslogv8::ssl') %>"
+<%   if scope.lookupvar('rsyslogv8::ssl_cert') and scope.lookupvar('rsyslogv8::ssl_cert') != :undef %>
+  defaultNetstreamDriverCertFile="<%= scope.lookupvar('rsyslogv8::ssl_cert') %>"
+<%   end -%>
+<%   if scope.lookupvar('rsyslogv8::ssl_key') and scope.lookupvar('rsyslogv8::ssl_key') != :undef %>
+  defaultNetstreamDriverKeyFile="<%= scope.lookupvar('rsyslogv8::ssl_key') %>"
+<%   end -%>
+<% end -%>
+)
+
+$PrivDropToUser <%= scope.lookupvar('rsyslogv8::run_user') %>
+$PrivDropToGroup <%= scope.lookupvar('rsyslogv8::run_group') %>
+<% if scope.lookupvar('rsyslogv8::umask') -%>
+$Umask <%= scope.lookupvar('rsyslogv8::umask') %>
+<% end -%>
+
 #################
 #### MODULES ####
 #################
 
 <% scope.lookupvar('rsyslogv8::modules').each_pair do |name, data| -%>
-(module load="<%= name %>" <%
+module(load="<%= name %>"<%
   if data.fetch('arguments', nil)
     if not data['arguments'].kind_of?(Array)
       raise Puppet::ParseError, "rsyslogv8::modules['arguments'] must be an array"
@@ -22,66 +47,24 @@ $LocalHostName <%= scope.lookupvar('rsyslogv8::local_host_name') %>
       end
       if not argument.fetch('name', nil) or not argument.fetch('value', nil)
         raise Puppet::ParseError, "rsyslogv8::modules['arguments'][#{index}] must contain keys \"name\" and \"value\""
-      end
-      %> <%= argument['name'] %>="<%= argument['value'] %> <%
-    end
-  end
-%>)
+      end %>
+  <%= argument['name'] %>="<%= argument['value'] %>
+<%  end
+  end -%>
+)
 <% end -%>
 
-<% if scope.lookupvar('rsyslogv8::non_kernel_facility') -%>
-# Enable non-kernel facility klog messages
-$KLogPermitNonKernelFacility on
-
+module(load="builtin:omfile"
+ fileOwner="<%= scope.lookupvar('rsyslogv8::log_user') %>"
+ fileGroup="<%= scope.lookupvar('rsyslogv8::log_group') %>"
+ fileCreateMode="<%= scope.lookupvar('rsyslogv8::perm_file') %>"
+ dirOwner="<%= scope.lookupvar('rsyslogv8::log_user') %>"
+ dirGroup="<%= scope.lookupvar('rsyslogv8::log_group') %>"
+ dirCreateMode="<%= scope.lookupvar('rsyslogv8::perm_dir') %>"
+<%- if scope.lookupvar('rsyslogv8::default_template')  and scope.lookupvar('rsyslogv8::default_template') != :undef %>
+ template="<%= scope.lookupvar('rsyslogv8::default_template') %>"
 <% end -%>
-###########################
-#### GLOBAL DIRECTIVES ####
-###########################
-#
-# Set max message size for sending and receiving
-#
-$MaxMessageSize <%= scope.lookupvar('rsyslogv8::max_message_size') %>
-
-#
-# Set rate limit for messages received.
-# 
-$SystemLogRateLimitInterval <%= scope.lookupvar('rsyslogv8::system_log_rate_limit_interval') %>
-$SystemLogRateLimitBurst <%= scope.lookupvar('rsyslogv8::system_log_rate_limit_burst') %>
-
-<% if scope.lookupvar('rsyslogv8::default_template')  and scope.lookupvar('rsyslogv8::default_template') != :undef -%>
-#
-# Use traditional timestamp format.
-# To enable high precision timestamps, comment out the following line.
-#
-$ActionFileDefaultTemplate <%= scope.lookupvar('rsyslogv8::default_template') %>
-
-<% end -%>
-<% if scope.lookupvar('rsyslogv8::msg_reduction') -%>
-# Filter duplicated messages
-$RepeatedMsgReduction on
-
-<% end -%>
-#
-# Set the default permissions for all log files.
-#
-$FileOwner <%= scope.lookupvar('rsyslogv8::log_user') %>
-$FileGroup <%= scope.lookupvar('rsyslogv8::log_group') %>
-$FileCreateMode <%= scope.lookupvar('rsyslogv8::perm_file') %>
-$DirOwner <%= scope.lookupvar('rsyslogv8::log_user') %>
-$DirGroup <%= scope.lookupvar('rsyslogv8::log_group') %>
-$DirCreateMode <%= scope.lookupvar('rsyslogv8::perm_dir') %>
-$PrivDropToUser <%= scope.lookupvar('rsyslogv8::run_user') %>
-$PrivDropToGroup <%= scope.lookupvar('rsyslogv8::run_group') %>
-$WorkDirectory <%= scope.lookupvar('rsyslogv8::spool_dir') %>
-<% if scope.lookupvar('rsyslogv8::umask') -%>
-$Umask <%= scope.lookupvar('rsyslogv8::umask') %>
-<% end -%>
-
-<% if scope.lookupvar('rsyslogv8::omit_local_logging') -%>
-# Turn off message reception via local log socket;
-# local messages are retrieved through imjournal now.
-$OmitLocalLogging on
-<% end -%>
+)
 
 #
 # Include all config files in <%= scope.lookupvar('rsyslogv8::rsyslog_d') %>
