@@ -91,15 +91,16 @@ class rsyslogv8 (
     fail('parameter manage_repo must be a boolean')
   }
   if ! is_bool($ssl) {
-    if ! is_string($ssl_ca) {
-      fail('parameter ssl must be a string (file source to the CA)')
-    }
-    if $ssl_cert != undef and ! is_string($ssl_cert) {
-      fail('parameter ssl_cert is set but is not a string (file source to the certificate)')
-    }
-    if $ssl_key != undef and ! is_string($ssl_key) {
-      fail('parameter ssl_key is set but is not a string (file source to the key)')
-    }
+    fail('parameter ssl must be a boolean')
+  }
+  if ! is_string($ssl_ca) {
+    fail('parameter ssl_ca must be an aboslute path to the CA file')
+  }
+  if $ssl_cert != undef and ! is_string($ssl_cert) and ! is_absolute_path($ssl_cert) {
+    fail('parameter ssl_cert must be an aboslute path to the cert file or undef')
+  }
+  if $ssl_key != undef and ! is_string($ssl_key) and ! is_aboslute_path($ssl_key) {
+    fail('parameter ssl_key must be an absolute path to the key file or undef')
   }
   if ! is_hash($repo_data) {
     fail('parameter rsyslogv8::params::repo_data must be a hash')
