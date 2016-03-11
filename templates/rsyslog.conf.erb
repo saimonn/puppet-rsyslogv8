@@ -14,12 +14,13 @@ global(
  action.reportSuspension="on"
  workDirectory="<%= scope.lookupvar('rsyslogv8::spool_dir') %>"
 <% if scope.lookupvar('rsyslogv8::ssl') and scope.lookupvar('rsyslogv8::ssl') != :undef %>
+ defaultNetstreamDriver="gtls"
  defaultNetStreamDriverCAFile="<%= scope.lookupvar('rsyslogv8::ssl') %>"
 <%   if scope.lookupvar('rsyslogv8::ssl_cert') and scope.lookupvar('rsyslogv8::ssl_cert') != :undef %>
-  defaultNetstreamDriverCertFile="<%= scope.lookupvar('rsyslogv8::ssl_cert') %>"
+ defaultNetstreamDriverCertFile="<%= scope.lookupvar('rsyslogv8::ssl_cert') %>"
 <%   end -%>
 <%   if scope.lookupvar('rsyslogv8::ssl_key') and scope.lookupvar('rsyslogv8::ssl_key') != :undef %>
-  defaultNetstreamDriverKeyFile="<%= scope.lookupvar('rsyslogv8::ssl_key') %>"
+ defaultNetstreamDriverKeyFile="<%= scope.lookupvar('rsyslogv8::ssl_key') %>"
 <%   end -%>
 <% end -%>
 )
