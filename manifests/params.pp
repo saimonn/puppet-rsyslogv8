@@ -297,7 +297,7 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_version_os_family_spool_dir,
                                       $::rsyslogv8::params::_os_family_spool_dir,
                                       $::rsyslogv8::params::_family_spool_dir,
-                                      '/var/spool/rsyslog/'
+                                      '/var/spool/rsyslog'
                                     )
   $modules                        = pick(
                                       $::rsyslogv8::params::_version_os_family_modules,
