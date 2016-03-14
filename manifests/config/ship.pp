@@ -22,7 +22,7 @@ define rsyslogv8::config::ship (
   $remote_auth             = 'anon',
   $queue_size_limit        = undef,
   $queue_batch_size        = 16,
-  $enqueue_timeout         = -1,
+  $enqueue_timeout         = 2000,
   $queue_mode              = 'LinkedList-DA',
   $queue_filename          = "queue-ship-${title}",
   $queue_max_disk_space    = '2g',
