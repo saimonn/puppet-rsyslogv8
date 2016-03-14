@@ -145,7 +145,7 @@ define rsyslogv8::config::ship (
     'anon': {
     }
     'x509/name': {
-      if ! ( $::rsyslogv8::ssl or $override_ssl ) {
+      if ! ( $_ssl ) {
         fail('::rsyslogv8::ssl or override_ssl must be enabled to authenticate using x509/name')
       }
     }
