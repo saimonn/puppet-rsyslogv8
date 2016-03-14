@@ -7,8 +7,12 @@
 <%- if @remote_port %>
  port="<% @remote_port %>"
 <%- end %>
-<%- @_remote_authorised_peers.each do |peer| %>
- streamDriverPermittedPeers="<%= peer %>"
+<%- if @_ssl %>
+ <%=  @_remote_auth_real_option_name %>=[
+<%-     @_remote_authorised_peers.each_index do |i| %>
+   "<%= @_remote_authorised_peers[i] %>" <%- if i < @_remote_authorised_peers.length -%> , <%- end %>
+<%-   end %>
+ ]
 <%- end %>
 <%- if @_omodule_extra_opts and @_omodule_extra_opts != :undef %>
 <%= @_omodule_extra_opts %>

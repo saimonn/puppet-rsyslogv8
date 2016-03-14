@@ -161,12 +161,14 @@ define rsyslogv8::config::ship (
       }
       $_omodule = 'omfwd'
       $_omodule_extra_opts = " Protocol=\"tcp\""
+      $_remote_auth_real_option_name = 'StreamDriver.AuthMode'
       $_ssl_extra_options = undef
     }
 
     'relp': {
       $_omodule = 'omrelp'
       $_omodule_extra_opts = undef
+      $_remote_auth_real_option_name = 'tls.permittedpeer'
       if $_ssl {
         $__ssl_enable = " tls=\"on\"\n"
         $__ssl_ca     = " tls.caCert=\"${_real_ca}\"\n"
@@ -193,6 +195,7 @@ define rsyslogv8::config::ship (
       if $remote_auth != 'anon' {
         fail('cannot authenticate hosts in udp use tcp for this feature')
       }
+      $_remote_auth_real_option_name = undef
     }
     default: {
       fail("unsupported protocol '${protocol}'")
