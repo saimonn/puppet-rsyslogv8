@@ -1,0 +1,35 @@
+# Managed by Puppet
+#
+
+<%= @selector %> action(
+ type="<%= @_omodule %>"
+ target="<%= @remote_host %>"
+<%- if @remote_port %>
+ port="<% @remote_port %>"
+<%- end %>
+<%- @_remote_authorised_peers.each do |peer| %>
+ streamDriverPermittedPeers="<%= peer %>"
+<%- end %>
+<%- if @_omodule_extra_opts and @_omodule_extra_opts != :undef %>
+<%= @_omodule_extra_opts %>
+<%  end -%>
+<%  if @_ssl -%>
+<%    if @_ssl_extra_options and @_ssl_extra_options != :undef %>
+<%=     @_ssl_extra_options %>
+<%-   end %>
+<%- end %>
+<%- if @queue_size_limit and @queue_size_limite != :undef %>
+ queue.size="<%= @queue_size_limit %>"
+<%- end %>
+<%- if @queue_batch_size and @queue_batch_size != :undef %>
+ queue.dequeuebatchsize="<%= @queue_batch_size %>"
+<%- end %>
+ queue.type="<%= @_queue_mode %>"
+<%- if @_queue_disk %>
+ queue.filename="<%= @queue_filename %>"
+ queue.maxdiskspace="<%= @queue_max_disk_space %>"
+<%-   if @queue_save_on_shutdown %>
+ queue.saveonshutdown="on"
+<%-   end %>
+<%- end %>
+)
