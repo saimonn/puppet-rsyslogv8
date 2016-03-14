@@ -21,6 +21,8 @@ class rsyslogv8::params {
       $_family_perm_dir             = '0755'
       $_family_perm_file            = '0640'
       $_family_umask                = undef
+      $_family_log_user             = undef
+      $_family_log_group            = undef
       case $::operatingsystem {
         'Debian': {
           $_os_family_manage_repo          = true
@@ -42,6 +44,8 @@ class rsyslogv8::params {
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
           $_os_family_umask                = undef
+          $_os_family_log_user             = undef
+          $_os_family_log_group            = undef
 
           case $::operatingsystemmajrelease {
             '6': {
@@ -111,6 +115,8 @@ class rsyslogv8::params {
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
           $_os_family_umask                = undef
+          $_os_family_log_user             = 'syslog'
+          $_os_family_log_group            = 'syslog'
 
           case $::operatingsystemmajrelease {
             '14.04': {
@@ -164,6 +170,8 @@ class rsyslogv8::params {
       $_family_perm_dir             = undef
       $_family_perm_file            = undef
       $_family_umask                = '0000'
+      $_family_log_user             = undef
+      $_family_log_group            = undef
 
       case $::operatingsystem {
         'Redhat', 'CentOS': {
@@ -186,6 +194,8 @@ class rsyslogv8::params {
           $_os_family_perm_dir             = undef
           $_os_family_perm_file            = undef
           $_os_family_umask                = undef
+          $_os_family_log_user             = undef
+          $_os_family_log_group            = undef
 
           case $::operatingsystemmajrelease {
             '5', '6': {
@@ -331,6 +341,14 @@ class rsyslogv8::params {
   $local_host_name                = undef
   $max_message_size               = '2k'
   $default_template               = undef
-  $log_user                       = $::rsyslogv8::params::_family_run_user
-  $log_group                      = $::rsyslogv8::params::_family_run_group
+  $log_user                       = pick(
+                                      $::rsyslogv8::params::_os_family_log_user,
+                                      $::rsyslogv8::params::_family_log_user,
+                                      'root'
+                                    )
+  $log_group                      = pick(
+                                      $::rsyslogv8::params::_os_family_log_group,
+                                      $::rsyslogv8::params::_family_log_group,
+                                      'root'
+                                    )
 }
