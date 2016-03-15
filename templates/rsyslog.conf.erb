@@ -70,7 +70,7 @@ module(load="builtin:omfile"
 #
 # Include all config files in <%= scope.lookupvar('rsyslogv8::rsyslog_d') %>
 #
-$IncludeConfig <%= scope.lookupvar('rsyslogv8::rsyslog_d') -%>*.conf
+$IncludeConfig <%= scope.lookupvar('rsyslogv8::rsyslog_d') -%>/*.conf
 
 #
 # Emergencies are sent to everybody logged in.
