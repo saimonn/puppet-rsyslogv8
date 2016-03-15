@@ -26,6 +26,7 @@ class rsyslogv8 (
   $ssl_ca                         = undef,
   $ssl_cert                       = undef,
   $ssl_key                        = undef,
+  $modules_extras                 = undef,
 ) inherits rsyslogv8::params {
   if ! is_string($rsyslog_package_name) and $rsyslog_package_name != false {
     fail('parameter rsyslog_package_name must be a string or false')
@@ -53,6 +54,9 @@ class rsyslogv8 (
   }
   if ! is_hash($modules) {
     fail('parameter modules must be a hash')
+  }
+  if $modules_extras != undef and ! is_hash($modules_extras) {
+    fail('parameter modules_extras must be an array or undef')
   }
   if ! is_bool($purge_rsyslog_d) {
     fail('parameter purge_rsyslog_d must be a boolean')

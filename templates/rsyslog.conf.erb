@@ -55,6 +55,28 @@ module(load="<%= name %>"<%
 )
 <% end -%>
 
+<% if scope.lookupvar('rsyslogv8::modules_extras') and scope.lookupvar('rsyslogv8::modules_extras') != :undef
+     scope.lookupvar('rsyslogv8::modules_extras').each_pair do |name, data| -%>
+module(load="<%= name %>"<%
+       if data.fetch('arguments', nil)
+         if not data['arguments'].kind_of?(Array)
+           raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'] must be an array"
+         end
+         data['arguments'].each_index do |index|
+           argument=data['arguments'][index]
+           if not argument.kind_of?(Hash)
+             raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'][#{index}] is not a Hash"
+           end
+           if not argument.fetch('name', nil) or not argument.fetch('value', nil)
+             raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'][#{index}] must contain keys \"name\" and \"value\""
+           end %>
+  <%=      argument['name'] %>="<%= argument['value'] %>"
+<%       end
+       end
+     end -%>
+)
+<% end -%>
+
 module(load="builtin:omfile"
  fileOwner="<%= scope.lookupvar('rsyslogv8::log_user') %>"
  fileGroup="<%= scope.lookupvar('rsyslogv8::log_group') %>"
