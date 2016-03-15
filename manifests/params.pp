@@ -336,7 +336,7 @@ class rsyslogv8::params {
   $service_name                   = 'rsyslog'
   $rsyslog_conf                   = '/etc/rsyslog.conf'
   $rsyslog_d                      = '/etc/rsyslog.d'
-  $purge_rsyslog_d                = false
+  $purge_rsyslog_d                = true
   $preserve_fqdn                  = false
   $local_host_name                = undef
   $max_message_size               = '2k'
