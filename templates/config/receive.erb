@@ -1,0 +1,41 @@
+# Managed by Puppet
+#
+
+<%- if @_define_local_ruleset %>
+template(name="receive-auth-as-is-<%= @title %>" type="string" string="%msg%\n")
+
+ruleset(
+ name="<%= @_real_ruleset_name %>"
+) {
+ auth,authpriv.* action(type="omfile" dynaFile="receiveAuthFile")
+ *.*;auth,authpriv.none,mail.none,cron.none  action(type="omfile" dynaFile="receiveSyslogFile")
+ cron.* action(type="omfile" dynaFile="receiveCronFile")
+ daemon.* action(type="omfile" dynaFile="receiveDaemonFile")
+ kern.* action(type="omfile" dynaFile="receiveKernFile")
+ mail.* action(type="omfile" dynaFile="receiveMailFile")
+ user.* action(type="omfile" dynaFile="receiveUserFile")
+ *.=info;*.=notice;*.=warn;auth.none,authpriv.none,cron.none,daemon.none,mail.none,news.none  action(type="omfile" dynaFile="receiveDebugFile")
+ :programname, isequal, "audispd"  action(type="omfile" template="receive-auth-as-is-<%= @title %>" dynaFile="receiveMessagesFile")
+}
+<%- end %>
+
+input(
+ name="<%= @title %>"
+ type="<%= @_imodule %>"
+<%- if @port and @port != :undef %>
+ port="<%= @port %>"
+<%- end %>
+ ruleset="<%= @_real_ruleset_name %>"
+<%- if @_ssl_extra_options and @_ssl_extra_options != :undef%>
+<%= @_ssl_extra_options %>
+<%- end %>
+<%- if @remote_authorised_peers %>
+ <%=  @_remote_auth_real_option_name %>=[
+<%-   @remote_authorised_peers.each_index do |i| %>
+   "<%= @remote_authorised_peers[i] %>" <%- if i < @remote_authorised_peers.length %>,<% end %>
+ ]
+<%-   end %>
+<%- end %>
+<% scope.function_template(['rsyslogv8/config/partial/queue.erb']) %>
+)
+
