@@ -7,7 +7,11 @@ describe 'rsyslogv8' do
       let(:facts) do
         facts
       end
-      it { is_expected.to compile.with_all_deps }
+
+      context 'with defaults' do
+        it { is_expected.to compile.with_all_deps }
+      end
+
     end
   end
 end
