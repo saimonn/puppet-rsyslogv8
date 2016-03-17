@@ -15,7 +15,7 @@ global(
  workDirectory="<%= scope.lookupvar('rsyslogv8::spool_dir') %>"
 <% if scope.lookupvar('rsyslogv8::ssl') and scope.lookupvar('rsyslogv8::ssl') != :undef %>
  defaultNetstreamDriver="gtls"
- defaultNetStreamDriverCAFile="<%= scope.lookupvar('rsyslogv8::ssl') %>"
+ defaultNetStreamDriverCAFile="<%= scope.lookupvar('rsyslogv8::ssl_ca') %>"
 <%   if scope.lookupvar('rsyslogv8::ssl_cert') and scope.lookupvar('rsyslogv8::ssl_cert') != :undef %>
  defaultNetstreamDriverCertFile="<%= scope.lookupvar('rsyslogv8::ssl_cert') %>"
 <%   end -%>
@@ -72,9 +72,9 @@ module(load="<%= name %>"<%
            end %>
   <%=      argument['name'] %>="<%= argument['value'] %>"
 <%       end
-       end
-     end -%>
+       end -%>
 )
+<%   end -%>
 <% end -%>
 
 module(load="builtin:omfile"

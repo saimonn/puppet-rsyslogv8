@@ -127,13 +127,16 @@ define rsyslogv8::config::receive (
   case $protocol {
     'tcp': {
       $_imodule = 'imtcp'
-      $_remote_auth_real_option_name = 'StreamDriver.AuthMode'
+      #$_remote_authorised_peers_real_option_name = 'PermittedPeer'
+      $_remote_authorised_peers_real_option_name = undef
       case $remote_auth {
         'anon': {
           $_ssl_extra_options = undef
         }
         'x509/name': {
-          $_ssl_extra_options = ' StreamDriver.AuthMode="x509/name"'
+          # $_ssl_extra_options = ' StreamDriver.AuthMode="x509/name"'
+          $_ssl_extra_options = undef
+          fail('listen-time authentication definition is not supported in tcp use relp, or change imtcp global options StreamDriver.AuthMode and PermittedPeer')
         }
         default: {
           fail('do not know what to do with remote_auth value, please fix it')
@@ -143,7 +146,7 @@ define rsyslogv8::config::receive (
 
     'relp': {
       $_imodule = 'imrelp'
-      $_remote_auth_real_option_name = 'tls.permittedpeer'
+      $_remote_authorised_peers_real_option_name = 'tls.permittedpeer'
       case $remote_auth {
         'anon': {
           $_ssl_extra_options = undef
@@ -159,7 +162,7 @@ define rsyslogv8::config::receive (
 
     'udp': {
       $_imodule = 'imudp'
-      $_remote_auth_real_option_name = undef
+      $_remote_authorised_peers_real_option_name = undef
       if $remote_auth != 'anon' {
         fail('cannot authenticate hosts using udp, use tcp or relp instead')
       }
