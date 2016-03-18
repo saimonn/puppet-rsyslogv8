@@ -327,6 +327,14 @@ class { 'rsyslogv8::config::local': }
 The erb file to use for the configuration file.
 Defaults to `${module_name}/config/local-${::osfamily}.erb` to have an OS-dependent default file.
 
+#### Class rsyslogv8::config::receive_templates
+Define the rsyslog filename templates when receiving logs from remote host.
+
+**Parameters within `rsyslogv8::config::local`:**
+
+##### `base_dir`
+The directory into which the logfiles will be written.
+
 ### Private Classes
 
 #### Class rsyslogv8::params
@@ -416,6 +424,8 @@ Supported Values: `undef` do not override, an absolute path to a file on the ser
 
 #### Defined type rsyslogv8::config::receive
 Define to receive logs from a remote server and manage them.
+
+This type includes rsyslogv8::config::receive_templates class to define the filenames used to write the received logs.
 
 **Parameters within `rsyslogv8::config::receive`:**
 
