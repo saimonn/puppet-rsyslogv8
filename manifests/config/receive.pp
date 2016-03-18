@@ -118,6 +118,9 @@ define rsyslogv8::config::receive (
       if ! $_ssl {
         fail('::rsyslogv8::ssl must be enabled to authenticate using x509/name')
       }
+      if $remote_authorised_peers == undef {
+        fail('must define remote_authorised_peers when authenticating hosts')
+      }
     }
     default: {
       fail("unknown value '${remote_auth}' for parameter remote_auth")

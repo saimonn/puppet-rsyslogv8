@@ -193,7 +193,7 @@ define rsyslogv8::config::ship (
       $_ssl_extra_options = undef
       $_omodule_extra_opts =  " Protocol=\"udp\""
       if $remote_auth != 'anon' {
-        fail('cannot authenticate hosts in udp use tcp for this feature')
+        fail('cannot authenticate hosts in udp consider using relp or tcp for this feature')
       }
       $_remote_auth_real_option_name = undef
     }
