@@ -154,6 +154,9 @@ define rsyslogv8::config::ship (
       }
       if $_ssl {
         $__ssl_extra_options_enable = "StreamDriver=\"gtls\"\n"
+        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6') {
+          notice("TLS with relp might not work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
+        }
       } else {
         $__ssl_extra_options_enable = "StreamDriver=\"ptcp\"\n"
       }
@@ -197,6 +200,9 @@ define rsyslogv8::config::ship (
       }
       if $_ssl {
         $__ssl_extra_options_enable = "tls=\"on\"\n"
+        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
+          fail("TLS with relp does NOT work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
+        }
       } else {
         $__ssl_extra_options_enable = "tls=\"off\"\n"
       }
