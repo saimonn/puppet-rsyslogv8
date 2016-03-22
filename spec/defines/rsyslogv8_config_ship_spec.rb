@@ -34,6 +34,58 @@ describe 'rsyslogv8::config::ship' do
           end
         end
 
+        context 'when overriding ssl params' do
+          context 'with TCP' do
+            let (:params) { {
+              :protocol          => 'tcp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
+            } }
+
+            it 'should fail' do
+              expect { should contain_rsyslogv8__config__ship('localhost')
+              }.to raise_error(Puppet::Error, /cannot override ssl parameters for plain tcp connection/)
+            end
+          end
+
+          context 'with RELP' do
+            let (:params) { {
+              :protocol          => 'relp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
+            } }
+
+            if facts[:osfamily] == 'RedHat' and ( facts[:operatingsystemmajrelease] == '5' or facts[:operatingsystemmajrelease] == '6' )
+              it 'should fail' do
+                expect { should contain_rsyslogv8__config__ship('localhost')
+                }.to raise_error(Puppet::Error, /TLS with relp does NOT work/)
+              end
+            else
+              it { should contain_rsyslogv8__config__ship('localhost')
+              }
+            end
+          end
+
+          context 'with UDP' do
+            let (:params) { {
+              :protocol          => 'udp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
+            } }
+
+            it 'should fail' do
+              expect { should contain_rsyslogv8__config__ship('localhost')
+              }.to raise_error(Puppet::Error, /cannot use ssl for udp connection/)
+            end
+          end
+
+        end
       end
     end
   end
@@ -68,8 +120,8 @@ describe 'rsyslogv8::config::ship' do
           end
         end
 
-        context 'protocol is tcp' do
-          context 'setting x509/name authentication' do
+        context 'setting x509/name authentication' do
+          context 'using TCP' do
             let (:params) { {
               :remote_auth => 'x509/name',
               :protocol    => 'tcp',
@@ -79,18 +131,86 @@ describe 'rsyslogv8::config::ship' do
             }
           end
 
-          context 'overriding ssl parameters' do
+          context 'using RELP' do
             let (:params) { {
-              :override_ssl => true,
-              :protocol     => 'tcp',
+              :remote_auth => 'x509/name',
+              :protocol    => 'relp',
+            } }
+
+            if facts[:osfamily] == 'RedHat' and ( facts[:operatingsystemmajrelease] == '5' or facts[:operatingsystemmajrelease] == '6' )
+              it 'should fail' do
+                expect { should contain_rsyslogv8__config__ship('localhost')
+                }.to raise_error(Puppet::Error, /TLS with relp does NOT work/)
+              end
+            else
+              it { should contain_rsyslogv8__config__ship('localhost')
+              }
+            end
+          end
+
+          context 'using UDP' do
+            let (:params) { {
+              :remote_auth => 'x509/name',
+              :protocol    => 'udp',
+            } }
+
+              it 'should fail' do
+                expect { should contain_rsyslogv8__config__ship('localhost')
+                }.to raise_error(Puppet::Error, /cannot use ssl for udp connection/)
+              end
+          end
+        end
+
+        context 'when overriding ssl params' do
+          context 'with TCP' do
+            let (:params) { {
+              :protocol          => 'tcp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
             } }
 
             it 'should fail' do
               expect { should contain_rsyslogv8__config__ship('localhost')
-              }.to raise_error(Puppet::Error, /.*cannot override ssl parameters for plain tcp connection consider using relp if you really want this feature.*/)
+              }.to raise_error(Puppet::Error, /cannot override ssl parameters for plain tcp connection/)
             end
           end
 
+          context 'with RELP' do
+            let (:params) { {
+              :protocol          => 'relp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
+            } }
+
+            if facts[:osfamily] == 'RedHat' and ( facts[:operatingsystemmajrelease] == '5' or facts[:operatingsystemmajrelease] == '6' )
+              it 'should fail' do
+                expect { should contain_rsyslogv8__config__ship('localhost')
+                }.to raise_error(Puppet::Error, /TLS with relp does NOT work/)
+              end
+            else
+              it { should contain_rsyslogv8__config__ship('localhost')
+              }
+            end
+          end
+
+          context 'with UDP' do
+            let (:params) { {
+              :protocol          => 'udp',
+              :override_ssl      => true,
+              :override_ssl_ca   => '/tmp/dummpy.pem',
+              :override_ssl_cert => '/tmp/dummpy.pem',
+              :override_ssl_key  => '/tmp/dummpy.pem',
+            } }
+
+            it 'should fail' do
+              expect { should contain_rsyslogv8__config__ship('localhost')
+              }.to raise_error(Puppet::Error, /cannot use ssl for udp connection/)
+            end
+          end
         end
 
       end
