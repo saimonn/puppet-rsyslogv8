@@ -178,6 +178,11 @@ define rsyslogv8::config::receive (
       if $override_ssl != undef or $override_ssl_cert or $override_ssl_key or $override_ssl_ca {
         fail('cannot override ssl parameters for plain tcp connection consider using relp if you really want this feature')
       }
+      if $_ssl {
+        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
+          notice("TLS with relp might not work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
+        }
+      }
     }
 
     'relp': {
@@ -212,6 +217,9 @@ define rsyslogv8::config::receive (
       }
       if $_ssl {
         $__ssl_extra_options_enable = " tls=\"on\"\n"
+        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
+          fail("TLS with relp does NOT work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
+        }
       } else {
         $__ssl_extra_options_enable = " tls=\"off\"\n"
       }
@@ -223,6 +231,9 @@ define rsyslogv8::config::receive (
       $_remote_auth_real_option_name = undef
       if $remote_auth != 'anon' {
         fail('cannot authenticate hosts using udp, use tcp or relp instead')
+      }
+      if $_ssl {
+        fail('TLS cannot be enabled using UDP use tcp or relp instead')
       }
       $_ssl_extra_options = undef
       $_remote_auth_real_mode = $remote_auth

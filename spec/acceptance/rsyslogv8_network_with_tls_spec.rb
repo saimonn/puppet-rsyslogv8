@@ -54,50 +54,54 @@ describe 'rsyslogv8' do
     end
 
     context 'RELP' do
-      it 'should apply without error' do
-        pp = <<-EOS
-          class { 'rsyslogv8':
-            modules_extras => { 'omrelp' => {} },
-          }
-          rsyslogv8::config::ship { 'localhost':
-            remote_port             => 514,
-            remote_auth             => 'x509/name',
-            protocol                => 'relp',
-            queue_size_limit        => 100000,
-            queue_mode              => 'LinkedList-DA',
-            remote_authorised_peers => [ 'localhost', 'foo', 'bar' ],
-            override_ssl            => true,
-            override_ssl_ca         => '/etc/cert-ship.pem',
-            override_ssl_cert       => '/etc/cert-ship.pem',
-            override_ssl_key        => '/etc/cert-ship.key',
-          }
-        EOS
+      if fact(:osfamily) == 'RedHat' and (fact(:operatingsystemmajrelease) == '5' or fact(:operatingsystemmajrelease) == '6')
+        skip("gnutls lib is too old on #{fact(:operatingsystem)}#{fact(:operatingsystemmajrelease)}")
+      else
+        it 'should apply without error' do
+          pp = <<-EOS
+            class { 'rsyslogv8':
+              modules_extras => { 'omrelp' => {} },
+            }
+            rsyslogv8::config::ship { 'localhost':
+              remote_port             => 514,
+              remote_auth             => 'x509/name',
+              protocol                => 'relp',
+              queue_size_limit        => 100000,
+              queue_mode              => 'LinkedList-DA',
+              remote_authorised_peers => [ 'localhost', 'foo', 'bar' ],
+              override_ssl            => true,
+              override_ssl_ca         => '/etc/cert-ship.pem',
+              override_ssl_cert       => '/etc/cert-ship.pem',
+              override_ssl_key        => '/etc/cert-ship.key',
+            }
+          EOS
 
-        apply_manifest(pp, :catch_failures => true)
-      end
-      it 'should idempotently run' do
-        pp = <<-EOS
-          class { 'rsyslogv8':
-            modules_extras => { 'omrelp' => {} },
-          }
-          rsyslogv8::config::ship { 'localhost':
-            remote_port             => 514,
-            remote_auth             => 'x509/name',
-            protocol                => 'relp',
-            queue_size_limit        => 100000,
-            queue_mode              => 'LinkedList-DA',
-            remote_authorised_peers => [ 'localhost', 'foo', 'bar' ],
-            override_ssl            => true,
-            override_ssl_ca         => '/etc/cert-ship.pem',
-            override_ssl_cert       => '/etc/cert-ship.pem',
-            override_ssl_key        => '/etc/cert-ship.key',
-          }
-        EOS
+          apply_manifest(pp, :catch_failures => true)
+        end
+        it 'should idempotently run' do
+          pp = <<-EOS
+            class { 'rsyslogv8':
+              modules_extras => { 'omrelp' => {} },
+            }
+            rsyslogv8::config::ship { 'localhost':
+              remote_port             => 514,
+              remote_auth             => 'x509/name',
+              protocol                => 'relp',
+              queue_size_limit        => 100000,
+              queue_mode              => 'LinkedList-DA',
+              remote_authorised_peers => [ 'localhost', 'foo', 'bar' ],
+              override_ssl            => true,
+              override_ssl_ca         => '/etc/cert-ship.pem',
+              override_ssl_cert       => '/etc/cert-ship.pem',
+              override_ssl_key        => '/etc/cert-ship.key',
+            }
+          EOS
 
-        apply_manifest(pp, :catch_changes => true)
-      end
-      describe command('rsyslogd -N1') do
-        its(:exit_status) { should eq 0 }
+          apply_manifest(pp, :catch_changes => true)
+        end
+        describe command('rsyslogd -N1') do
+          its(:exit_status) { should eq 0 }
+        end
       end
     end
 

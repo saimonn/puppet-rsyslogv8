@@ -58,6 +58,8 @@ rsyslogv8::config::snippet { $any_unique_name:
 
 ### using SSL/TLS
 
+Note that TLS is not properly supported on RHEL 5, RHEL 6, CentOS 5 and CentOS 6. This means that RELP with TLS does not work at all, rsyslog just makes a log line saying that the gnutls library is too old. TCP with TLS is accepted and actually starts listening, however, librelp documentation does say that gnutls does not have Certificate verification functions, this might be dagerous to use TLS in these OSes, giving you a false sense of security.
+
 You can set global SSL/TLS options like this:
 
 ``` puppet
@@ -97,7 +99,7 @@ class { 'rsyslogv8':
   modules_extras => {
     'imtcp' => {
       'StreamDriver.AuthMode' => 'x509/name',
-      'PermittedPeer' => [ $host_fqdn_1, $host_fqdn_2, $host_fqdn_3, '*.secure-subdomain.example.com' ],
+      'PermittedPeer' => "[ \"$host_fqdn_1\", \"$host_fqdn_2\", \"$host_fqdn_3\", \"*.secure-subdomain.example.com\" ]",
     },
   },
 }
