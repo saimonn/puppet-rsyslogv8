@@ -232,6 +232,9 @@ define rsyslogv8::config::receive (
       if $remote_auth != 'anon' {
         fail('cannot authenticate hosts using udp, use tcp or relp instead')
       }
+      if $_ssl {
+        fail('TLS cannot be enabled using UDP use tcp or relp instead')
+      }
       $_ssl_extra_options = undef
       $_remote_auth_real_mode = $remote_auth
     }
