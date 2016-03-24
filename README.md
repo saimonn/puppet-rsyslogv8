@@ -99,7 +99,7 @@ class { 'rsyslogv8':
   modules_extras => {
     'imtcp' => {
       'StreamDriver.AuthMode' => 'x509/name',
-      'PermittedPeer' => [ $host_fqdn_1, $host_fqdn_2, $host_fqdn_3, '*.secure-subdomain.example.com' ],
+      'PermittedPeer' => "[ \"$host_fqdn_1\", \"$host_fqdn_2\", \"$host_fqdn_3\", \"*.secure-subdomain.example.com\" ]",
     },
   },
 }
