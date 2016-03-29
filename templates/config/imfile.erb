@@ -1,0 +1,19 @@
+<%
+  @files.each_index do |i|
+  if not scope.function_is_absolute_path([ @files[i] ])
+    raise Puppet::ParseError "files[#{i}] is not an absolute filepath got \"#{@files[i]}\""
+  end
+%>
+input(
+ type="imfile"
+ file="<%= @files[i] %>"
+ tag="<%= @rsyslog_tag %>"
+ facility="<%= @facility %>"
+ severity="<%= @severity %>"
+ readmode="<%= @_real_readmode %>"
+ ruleset="<%= @ruleset_name %>"
+<% if @_statefiles and @_statefiles != :undef and @_statefiles[i] and @_statefiles[i] != :undef %>
+ statefile="<%= @_statefiles[i] %>"
+<% end %>
+)
+<% end %>
