@@ -2,7 +2,8 @@ define rsyslogv8::config::snippet(
   $content,
   $priority = 50,
 ) {
-  file { "${::rsyslogv8::rsyslog_d}/${priority}-${title}.conf":
+  $sanitized_title = regsubst($title, '[/,:, ,?,(,)]','_','G')
+  file { "${::rsyslogv8::rsyslog_d}/${priority}-${sanitized_title}.conf":
     owner   => 'root',
     group   => $::rsyslogv8::run_user,
     content => $content,
