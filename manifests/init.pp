@@ -61,15 +61,9 @@ class rsyslogv8 (
   if ! is_bool($purge_rsyslog_d) {
     fail('parameter purge_rsyslog_d must be a boolean')
   }
-  if ! is_string($spool_dir) and ! is_absolute_path($spool_dir) {
-    fail('parameter spool_dir must be an absolute path')
-  }
-  if ! is_string($rsyslog_d) and ! is_absolute_path($rsyslog_d) {
-    fail('parameter rsyslog_d must be an absolute path')
-  }
-  if ! is_string($rsyslog_conf) and ! is_absolute_path($rsyslog_conf) {
-    fail('parameter rsyslog_conf must be an absolute path')
-  }
+  validate_absolute_path($spool_dir)
+  validate_absolute_path($rsyslog_d)
+  validate_absolute_path($rsyslog_conf)
   if ! is_bool($preserve_fqdn) {
     fail('parameter preserve_fqdn must be a boolean')
   }
@@ -97,14 +91,14 @@ class rsyslogv8 (
   if ! is_bool($ssl) {
     fail('parameter ssl must be a boolean')
   }
-  if ! is_string($ssl_ca) {
-    fail('parameter ssl_ca must be an aboslute path to the CA file')
+  if $ssl_ca != undef {
+    validate_absolute_path($ssl_ca)
   }
-  if $ssl_cert != undef and ! is_string($ssl_cert) and ! is_absolute_path($ssl_cert) {
-    fail('parameter ssl_cert must be an aboslute path to the cert file or undef')
+  if $ssl_cert != undef {
+    validate_absolute_path($ssl_cert)
   }
-  if $ssl_key != undef and ! is_string($ssl_key) and ! is_aboslute_path($ssl_key) {
-    fail('parameter ssl_key must be an absolute path to the key file or undef')
+  if $ssl_key != undef {
+    validate_absolute_path($ssl_key)
   }
   if ! is_hash($repo_data) {
     fail('parameter rsyslogv8::params::repo_data must be a hash')

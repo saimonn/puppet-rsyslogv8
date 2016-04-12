@@ -76,14 +76,14 @@ define rsyslogv8::config::receive (
   if $override_ssl != undef and ! is_bool($override_ssl) {
     fail('parameter override_ssl must be a boolean or undef')
   }
-  if $override_ssl_ca != false and ! is_string($override_ssl_ca) and is_absolute_path($override_ssl_ca) {
-    fail('parameter override_ssl_ca must be an aboslute path or false')
+  if $override_ssl_ca != false {
+    validate_absolute_path($override_ssl_ca)
   }
-  if $override_ssl_key != false and ! is_string($override_ssl_key) and ! is_absolute_path($override_ssl_key){
-    fail('parameter override_ssl_key must be an absolute path to the key file or false')
+  if $override_ssl_key != false {
+    validate_absolute_path($override_ssl_key)
   }
-  if $override_ssl_cert != false and ! is_string($override_ssl_cert) and ! is_absolute_path($override_ssl_cert) {
-    fail('parameter override_ssl_cert must be an absolute path to the cert file or false')
+  if $override_ssl_cert != false {
+    validate_absolute_path($override_ssl_cert)
   }
 
 

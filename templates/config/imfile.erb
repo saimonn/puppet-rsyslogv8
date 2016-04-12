@@ -1,9 +1,4 @@
-<%
-  @files.each_index do |i|
-  if not scope.function_is_absolute_path([ @files[i] ])
-    raise Puppet::ParseError "files[#{i}] is not an absolute filepath got \"#{@files[i]}\""
-  end
-%>
+<% @files.each_index do |i| %>
 input(
  type="imfile"
  file="<%= @files[i] %>"
