@@ -79,8 +79,14 @@ define rsyslogv8::config::ship (
     fail('parameter override_ssl must be a boolean or undef')
   }
   $_remote_authorised_peers = pick($remote_authorised_peers, $remote_host)
-  if $override_ssl_ca != false and ! is_string($override_ssl_ca) and is_absolute_path($override_ssl_ca) {
-    fail('parameter override_ssl_ca must be an aboslute path or false')
+  if $override_ssl_ca != false {
+    validate_absolute_path($override_ssl_ca)
+  }
+  if $override_ssl_cert != false {
+    validate_absolute_path($override_ssl_cert)
+  }
+  if $override_ssl_key != false {
+    validate_absolute_path($override_ssl_key)
   }
 
   # Local variables definitions for template and semantic checking of input

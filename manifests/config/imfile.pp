@@ -13,6 +13,7 @@ define rsyslogv8::config::imfile(
   if ! is_array($files) {
     fail('files must be an array of file full-paths')
   }
+  validate_absolute_path($files)
   if ! is_string($ruleset_name) {
     fail('ruleset_name must be a string')
   }
