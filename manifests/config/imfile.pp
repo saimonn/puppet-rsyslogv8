@@ -5,11 +5,7 @@ define rsyslogv8::config::imfile(
   $facility      = 'local0',
   $severity      = 'notice',
   $readmode      = 'line',
-  $makestatefile = undef,
 ) {
-  if $makestatefile != undef and ! is_bool($makestatefile) {
-    fail('makestatefile must be a bool or undef')
-  }
   if ! is_array($files) {
     fail('files must be an array of file full-paths')
   }
@@ -89,11 +85,6 @@ define rsyslogv8::config::imfile(
     default: {
       fail("unknown readmode ${readmode} supported values are any in ['line', 0, 'paragraph', 1, 'indented', 2]")
     }
-  }
-  if $makestatefile == true or ($makestatefile == undef and $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '8') {
-    $_statefiles = regsubst($files, '[/,:, ,?,(,)]', '-', 'G')
-  } else {
-    $_statefiles = undef
   }
 
   # create config snippet using template
