@@ -159,7 +159,7 @@ define rsyslogv8::config::ship (
         fail('cannot override ssl parameters for plain tcp connection consider using relp if you really want this feature')
       }
       if $_ssl {
-        $__ssl_extra_options_enable = "StreamDriver=\"gtls\"\n"
+        $__ssl_extra_options_enable = "StreamDriver=\"gtls\"\n StreamDriverMode=\"1\"\n"
         if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6') {
           notice("TLS with relp might not work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
         }
