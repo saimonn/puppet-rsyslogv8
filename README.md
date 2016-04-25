@@ -200,7 +200,15 @@ Default value is obviously different for each OS:
 }
 ```
 
-- Debian 8: Defaults to an empty hash
+- Debian 8: Will be the parameters for apt::source
+``` puppet
+{
+  'location' => 'http://ftp.debian.org/debian',
+  'release'  => "jessie-backports",
+  'include'  => { 'source' => false },
+  'repos'    => 'main',
+}
+```
 
 - Ubuntu: Will be the parameters for apt::source
 ``` puppet
@@ -225,6 +233,18 @@ Default value is obviously different for each OS:
   #'gpgkey'        => '',
 }
 ```
+
+#####  `install_options`
+The options to pass to the package manager.
+
+Default value is obviously different for each OS:
+- Debian 8:
+``` puppet
+ [
+   '-t', 'jessie-backports'
+ ]
+```
+- All others: have no options as an empty array
 
 #####  `package_status`
 The `ensure` parameter value of the packages.
