@@ -257,18 +257,6 @@ Default value is obviously different for each OS:
 ```
 - All others: have no pinning as false
 
-#####  `install_options`
-The options to pass to the package manager.
-
-Default value is obviously different for each OS:
-- Debian 8:
-``` puppet
- [
-   '-t', 'jessie-backports'
- ]
-```
-- All others: have no options as an empty array
-
 #####  `package_status`
 The `ensure` parameter value of the packages.
 Defaults to `latest`.
