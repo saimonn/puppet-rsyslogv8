@@ -234,17 +234,28 @@ Default value is obviously different for each OS:
 }
 ```
 
-#####  `install_options`
-The options to pass to the package manager.
+#####  `pin_packages`
+The pinning options for the packages.
 
 Default value is obviously different for each OS:
 - Debian 8:
 ``` puppet
- [
-   '-t', 'jessie-backports'
- ]
+ {
+   priority => 1001,
+   packages => [
+     'liblognorm2',
+     'rsyslog-gnutls',
+     'rsyslog-relp',
+     'rsyslog-mysql',
+     'rsyslog-pgsql',
+     'rsyslog-mongodb',
+     'rsyslog-doc',
+     'rsyslog-gssapi',
+   ],
+   release  => 'jessie-backports',
+ }
 ```
-- All others: have no options as an empty array
+- All others: have no pinning as false
 
 #####  `package_status`
 The `ensure` parameter value of the packages.

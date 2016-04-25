@@ -23,7 +23,7 @@ class rsyslogv8::params {
       $_family_umask                = undef
       $_family_log_user             = undef
       $_family_log_group            = undef
-      $_family_install_options      = undef
+      $_family_pin_packages         = undef
       case $::operatingsystem {
         'Debian': {
           $_os_family_manage_repo          = true
@@ -47,7 +47,7 @@ class rsyslogv8::params {
           $_os_family_umask                = undef
           $_os_family_log_user             = undef
           $_os_family_log_group            = undef
-          $_os_family_install_options      = undef
+          $_os_family_pin_packages         = undef
 
           case $::operatingsystemmajrelease {
             '6': {
@@ -63,7 +63,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             '7': {
               $_version_os_family_manage_repo          = undef
@@ -78,7 +78,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             '8': {
               $_version_os_family_manage_repo          = undef
@@ -99,7 +99,21 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = [ '-t', 'jessie-backports' ]
+              $_version_os_family_pin_packages         = {
+                priority => 1001,
+                packages => [
+                  'liblognorm2',
+                  'rsyslog',
+                  'rsyslog-gnutls',
+                  'rsyslog-relp',
+                  'rsyslog-mysql',
+                  'rsyslog-pgsql',
+                  'rsyslog-mongodb',
+                  'rsyslog-doc',
+                  'rsyslog-gssapi',
+                ],
+                release  => 'jessie-backports',
+              }
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -128,7 +142,7 @@ class rsyslogv8::params {
           $_os_family_umask                = undef
           $_os_family_log_user             = 'syslog'
           $_os_family_log_group            = 'syslog'
-          $_os_family_install_options      = undef
+          $_os_family_pin_packages         = undef
 
           case $::operatingsystemmajrelease {
             '14.04': {
@@ -144,7 +158,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             '15.04', '15.10': {
               $_version_os_family_manage_repo          = undef
@@ -159,7 +173,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -186,7 +200,7 @@ class rsyslogv8::params {
       $_family_umask                = '0000'
       $_family_log_user             = undef
       $_family_log_group            = undef
-      $_family_install_options      = undef
+      $_family_pin_packages         = undef
 
       case $::operatingsystem {
         'Redhat', 'CentOS': {
@@ -211,7 +225,7 @@ class rsyslogv8::params {
           $_os_family_umask                = undef
           $_os_family_log_user             = undef
           $_os_family_log_group            = undef
-          $_os_family_install_options      = undef
+          $_os_family_pin_packages         = undef
 
           case $::operatingsystemmajrelease {
             '5', '6': {
@@ -227,7 +241,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             '7': {
               $_version_os_family_manage_repo          = undef
@@ -252,7 +266,7 @@ class rsyslogv8::params {
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
               $_version_os_family_umask                = undef
-              $_version_os_family_install_options      = undef
+              $_version_os_family_pin_packages         = undef
             }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
@@ -370,10 +384,11 @@ class rsyslogv8::params {
                                       'root'
                                     )
 
-  $install_options                = pick(
-                                      $::rsyslogv8::params::_version_os_family_install_options,
-                                      $::rsyslogv8::params::_os_family_install_options,
-                                      $::rsyslogv8::params::_family_install_options,
-                                      []
+  $pin_packages                   = pick(
+                                      $::rsyslogv8::params::_version_os_family_pin_packages,
+                                      $::rsyslogv8::params::_os_family_pin_packages,
+                                      $::rsyslogv8::params::_family_pin_packages,
+                                      false
                                     )
+
 }
