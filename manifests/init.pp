@@ -22,6 +22,7 @@ class rsyslogv8 (
   $default_template               = $rsyslogv8::params::default_template,
   $log_user                       = $rsyslogv8::params::log_user,
   $log_group                      = $rsyslogv8::params::log_group,
+  $pin_packages                   = $rsyslogv8::params::pin_packages,
   $ssl                            = false,
   $ssl_ca                         = undef,
   $ssl_cert                       = undef,
@@ -60,6 +61,9 @@ class rsyslogv8 (
   }
   if ! is_bool($purge_rsyslog_d) {
     fail('parameter purge_rsyslog_d must be a boolean')
+  }
+  if $pin_packages != false and ! is_hash($pin_packages) {
+    fail('parameter pin_packages must be false or a hash')
   }
   validate_absolute_path($spool_dir)
   validate_absolute_path($rsyslog_d)
