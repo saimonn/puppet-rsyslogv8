@@ -339,8 +339,9 @@ class rsyslogv8::params {
                                         'imuxsock'    => {
                                           'comment'   => 'provides support for local system logging',
                                           'arguments' => [
-                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
-                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
+                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'        },
+                                            { 'name'  => 'SysSock.Name',               'value' => '/dev/log' },
+                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100'      },
                                           ],
                                         },
                                         'imklog'   => { 'comment' => 'provides kernel logging support (previously done by rklogd)' },
