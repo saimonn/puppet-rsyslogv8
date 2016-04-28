@@ -1,0 +1,51 @@
+  port="<%= @action.fetch("port", 514) %>"
+<%raise Puppet::ParseError, "target is not set for action #{@action.fetch('target', @title)}" unless @action.fetch('target', nil) -%>
+  target="<%= @action['target'] %>"
+<%raise Puppet::ParseError, "protocol is not set for action #{@action['name']}" unless @action.fetch('protocol', nil) -%>
+  protocol="<%= @action['protocol'] %>"
+<%
+  # Black magic to set correctly the SSL options of rsyslog with local options overriding global options
+
+  # Choose if we want to enable SSL
+  if @action.fetch('ssl', nil) != nil and @action['ssl'] != :undef
+    # if overridden locally, chose local option
+    __ssl = @action['ssl']
+    if scope.lookupvar('::osfamily') == 'RedHat' and ( scope.lookupvar('::operatingsystemmajrelease') == '5' or scope.lookupvar('::operatingsystemmajrelease') == '6')
+      scope.function_notice(["TLS with relp might not work in #{scope.lookupvar('::operatingsystem')}#{scope.lookupvar('::operatingsystemmajrelease')} due to an old version of gnutls"])
+    end
+  else
+    # if not overridden locally, choose global parameter
+    __ssl = scope.lookupvar('::rsyslogv8::ssl')
+  end
+  if __ssl
+    # we want ssl
+    raise Puppet::ParseError, "Cannot use ssl for udp connection (in action #{@action['name']}) consider using relp or tcp for this feature" unless (@action['protocol'] == 'tcp')
+-%>
+  StreamDriver="gtls"
+  StreamDriverMode="1"
+<%
+    # Setup authentication options
+    if @action.fetch('auth', nil) == 'x509/name'
+      # Want authentication by certificate name
+-%>
+  StreamDriverAuthMode="x509/name"
+<%
+      raise Puppet::ParseError, "when authentication by name is selected authorised_peers must be set in action #{@action['name']}" unless @action.fetch('authorised_peers', nil)
+      raise Puppet::ParseError, "authorised_peers must be a String in action #{@action['name']}" unless @action['authorised_peers'].is_a?(String)
+-%>
+  StreamDriverPermittedPeers="<%= @action['authorised_peers'] %>"
+<%
+    elsif @action.fetch('auth', nil) == 'anon' or @action.fetch('auth', nil) == nil or @action.fetch['auth'] == :undef
+      # No authentication
+-%>
+  StreamDriverAuthMode="anon"
+<%
+    else # unknown auth mode
+      raise Puppet::ParseError, "unknown auth mode #{@action['auth']} for action #{@action['name']}"
+    end
+  else # no __ssl
+-%>
+  StreamDriver="ptcp"
+<%
+  end
+-%>

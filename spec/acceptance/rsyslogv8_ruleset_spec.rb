@@ -9,6 +9,51 @@ describe 'rsyslogv8' do
       rsyslogv8::config::ruleset { 'test':
         actions => [
           {
+            'type' => 'omfwd',
+            'name' => 'send',
+            'target' => 'localhost',
+            'protocol' => 'tcp',
+            'comment' => 'This is a one-line comment',
+            'queue' => {
+              'type' => 'LinkedList',
+            },
+          },
+          { 'type' => 'omfwd',
+            'target' => 'localhost',
+            'protocol' => 'udp',
+            'name'     => 'send2',
+            'queue'    => {
+              'type'     => 'Disk',
+              'filename' => 'queue-filename2',
+            },
+          },
+          {
+            'type'     => 'omfwd',
+            'protocol' => 'tcp',
+            'target'   => 'localhost',
+            'name'     => 'send3',
+            'ssl'      => true,
+            'queue'    => {
+              'type' => 'FixedArray',
+            },
+          },
+          {
+            'type'             => 'omfwd',
+            'protocol'         => 'tcp',
+            'target'           => 'localhost',
+            'name'             => 'send4',
+            'ssl'              => true,
+            'auth'             => 'x509/name',
+            'selector'         => 'local0.*',
+            'authorised_peers' => 'localhost',
+            'queue'            => {
+              'type'             => 'LinkedList',
+              'filename'         => 'queue-filename',
+              'max_disk_space'   => '4g',
+              'save_on_shutdown' => true,
+            },
+          },
+          {
             'type'    => 'omrelp',
             'name'    => 'send10',
             'target'  => 'localhost',
