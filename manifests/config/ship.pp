@@ -1,4 +1,5 @@
 # Define to send locally generated logs to a remote server.
+# This action will be put in the ruleset named "RSYSLOG_DefaultRuleset"
 #  remote_auth: [Enum] remote authentication method. Supported Values: "x509/name" (if ssl enabled use CN), "anon" (no auth)
 #  queue_size_limit: [Integer|undef] Maximum number of events in the queue
 #  queue_batch_size: [Integer] Maximum number of events taken from the queue at once to be processed in batch
@@ -236,6 +237,6 @@ define rsyslogv8::config::ship (
   # create config snippet using template
   ::rsyslogv8::config::snippet { "ship-${title}":
     content  => template("${module_name}/config/ship.erb"),
-    priority => 90,
+    priority => '90',
   }
 }

@@ -90,6 +90,6 @@ define rsyslogv8::config::imfile(
   # create config snippet using template
   ::rsyslogv8::config::snippet { "imfile-${title}":
     content  => template("${module_name}/config/imfile.erb"),
-    priority => 20,
+    priority => '20',
   }
 }
