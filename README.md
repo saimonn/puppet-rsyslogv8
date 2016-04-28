@@ -444,6 +444,74 @@ Manage the service of rsyslog 8.x.
 
 ### Public defined types
 
+#### Defined type rsyslogv8::config::ruleset
+Define to create a rsyslog ruleset.
+
+**Parameters within `rsyslogv8::config::ruleset`:**
+
+##### `actions`
+The list containing actions that will be performed on the events. Each action is a hash and also contains its own queue parameters.
+
+To have consistency every parameter concerning SSL are uniformized:
+ `ssl`              => Boolean to enable or disable SSL/TLS support in actions that support it (if not set the global ::rsyslogv8::ssl value is taken
+ `ssl_cert`         => String full file path to the certificate file
+ `ssl_ca`           => String full file path to the certificate authority
+ `ssl_key`          => String full file path to the private key
+ `auth`             => String authentication mode for the action can be any of: 'anon', 'x509/name'
+ `authorised_peers` => String the name of authorized host for the action when `auth` is 'x509/name'
+
+Other parameters have the same name as in the rsyslog documentation.
+
+Example of usage:
+
+``` puppet
+::rsyslogv8::config::ruleset { 'my_ruleset':
+  actions => [
+    {
+      'type'             => 'omfwd',
+      'protocol'         => 'tcp',
+      'target'           => 'localhost',
+      'name'             => 'send4',
+      'ssl'              => true,
+      'auth'             => 'x509/name',
+      'selector'         => 'local0.*',
+      'authorised_peers' => 'localhost',
+      'queue'            => {
+        'type'             => 'LinkedList',
+        'filename'         => 'queue-filename',
+        'max_disk_space'   => '4g',
+        'save_on_shutdown' => true,
+      },
+    },
+    {
+      'type'             => 'omrelp',
+      'target'           => 'localhost',
+      'name'             => 'send12',
+      'ssl'              => true,
+      'auth'             => 'x509/name',
+      'selector'         => 'local0.*',
+      'authorised_peers' => 'localhost',
+    },
+    {
+      'name'     => 'local1',
+      'type'     => 'omfile',
+      'file'     => 'localhost',
+      'template' => 'RSYSLOG_TraditionalFileFormat',
+    },
+    {
+      'type'     => 'stop',
+      'name'     => 'stop',
+      'selector' => '*.*',
+    },
+  ],
+}
+```
+
+##### `ruleset_name`
+The name of the ruleset, this will be the name that rsyslog uses to reference the ruleset in inputs' ruleset parameter.
+
+Defaults to the name of the resource.
+
 #### Defined type rsyslogv8::config::ship
 Define to send locally generated logs to a remote server.
 

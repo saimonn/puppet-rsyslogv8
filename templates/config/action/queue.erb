@@ -1,0 +1,16 @@
+<%raise Puppet::ParseError, "Queue must have a type in resource named #{@title}" unless ( @queue.fetch('type', nil) != nil and @queue['type'] != :undef ) -%>
+  queue.type="<%= @queue['type'] %>"
+<%if @queue.fetch('size_limit', nil) and @queue['size_limite'] != :undef -%>
+  queue.size="<%= @queue['size_limit'] %>"
+<%end -%>
+  queue.timeoutenqueue="<%= ( @queue.fetch('enqueue_timeout', nil) != nil and @queue['enqueue_timeout'] != :undef ) ? @queue['enqueue_timeout'] : 2000 %>"
+<%if @queue.fetch('batch_size', nil) != nil and @queue['batch_size'] != :undef -%>
+  queue.dequeuebatchsize="<%= @queue['batch_size'] %>"
+<%end -%>
+<%if @queue.fetch('filename', nil) != nil and @queue['filename'] != :undef -%>
+  queue.filename="<%= @queue['filename'] %>"
+  queue.maxdiskspace="<%= @queue.fetch('max_disk_space', '2g') %>"
+<%  if @queue.fetch('save_on_shutdown', nil) != nil and @queue['save_on_shutdown'] != :undef -%>
+  queue.saveonshutdown="on"
+<%  end -%>
+<%end -%>
