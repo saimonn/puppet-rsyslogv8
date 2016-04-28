@@ -1,7 +1,8 @@
 define rsyslogv8::config::snippet(
   $content,
-  $priority = 50,
+  $priority = '50',
 ) {
+  validate_re($priority, '^\d\d$')
   $sanitized_title = regsubst($title, '[/,:, ,?,(,)]','_','G')
   file { "${::rsyslogv8::rsyslog_d}/${priority}-${sanitized_title}.conf":
     owner   => 'root',

@@ -255,7 +255,7 @@ define rsyslogv8::config::receive (
   # create config snippet using template
   ::rsyslogv8::config::snippet { "receive-${title}":
     content  => template("${module_name}/config/receive.erb"),
-    priority => 50,
+    priority => '50',
   }
 }
 
