@@ -8,6 +8,18 @@ describe 'rsyslogv8' do
       rsyslogv8::config::ruleset { 'test':
         actions => [
           {
+            'name'     => 'local1',
+            'type'     => 'omfile',
+            'file'     => 'localhost',
+            'template' => 'RSYSLOG_TraditionalFileFormat',
+          },
+          {
+            'name'     => 'local2',
+            'type'     => 'omfile',
+            'file'     => 'localhost2',
+            'selector' => '&',
+          },
+          {
             'type'     => 'stop',
             'name'     => 'stop',
             'selector' => '*.*',
