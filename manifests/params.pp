@@ -253,13 +253,13 @@ class rsyslogv8::params {
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
               $_version_os_family_modules              = {
-                                        'imuxsock'    => {
+                                        'imuxsock' => {
                                           'comment'   => 'provides support for local system logging',
-                                          'arguments' => [
-                                            { 'name'  => 'SysSock.Use',                'value' => 'off' },
-                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
-                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
-                                          ],
+                                          'arguments' => {
+                                            'SysSock.Use'                => 'off',
+                                            'SysSock.RateLimit.Interval' => 1,
+                                            'SysSock.RateLimit.Burst'    => 100,
+                                          },
                                         },
                                         'imjournal' => { 'comment' => 'provides access to the systemd journal' },
               }
@@ -336,13 +336,13 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_os_family_modules,
                                       $::rsyslogv8::params::_family_modules,
                                       {
-                                        'imuxsock'    => {
+                                        'imuxsock' => {
                                           'comment'   => 'provides support for local system logging',
-                                          'arguments' => [
-                                            { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'        },
-                                            { 'name'  => 'SysSock.Name',               'value' => '/dev/log' },
-                                            { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100'      },
-                                          ],
+                                          'arguments' => {
+                                            'SysSock.RateLimit.Interval' => 1,
+                                            'SysSock.Name'               => '/dev/log',
+                                            'SysSock.RateLimit.Burst'    => 100,
+                                          },
                                         },
                                         'imklog'   => { 'comment' => 'provides kernel logging support (previously done by rklogd)' },
                                       }

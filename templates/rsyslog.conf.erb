@@ -36,58 +36,18 @@ $Umask <%= scope.lookupvar('rsyslogv8::umask') %>
 #################
 
 <% scope.lookupvar('rsyslogv8::modules').each_pair do |name, data| -%>
-module(load="<%= name %>"<%
-  if data.fetch('arguments', nil)
-    if not data['arguments'].kind_of?(Array)
-      raise Puppet::ParseError, "rsyslogv8::modules['arguments'] must be an array"
-    end
-    data['arguments'].each_index do |index|
-      argument=data['arguments'][index]
-      if not argument.kind_of?(Hash)
-        raise Puppet::ParseError, "rsyslogv8::modules['arguments'][#{index}] is not a Hash"
-      end
-      if not argument.fetch('name', nil) or not argument.fetch('value', nil)
-        raise Puppet::ParseError, "rsyslogv8::modules['arguments'][#{index}] must contain keys \"name\" and \"value\""
-      end %>
-  <%= argument['name'] %>="<%= argument['value'] %>"
-<%  end
-  end -%>
-)
+<%= scope.function_sub_template_call([ 'rsyslogv8/module.erb', { 'name' => name, 'rsysmodule' => data } ]) -%>
 <% end -%>
 
-<% if scope.lookupvar('rsyslogv8::modules_extras') and scope.lookupvar('rsyslogv8::modules_extras') != :undef
-     scope.lookupvar('rsyslogv8::modules_extras').each_pair do |name, data| -%>
-module(load="<%= name %>"<%
-       if data.fetch('arguments', nil)
-         if not data['arguments'].kind_of?(Array)
-           raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'] must be an array"
-         end
-         data['arguments'].each_index do |index|
-           argument=data['arguments'][index]
-           if not argument.kind_of?(Hash)
-             raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'][#{index}] is not a Hash"
-           end
-           if not argument.fetch('name', nil) or not argument.fetch('value', nil)
-             raise Puppet::ParseError, "rsyslogv8::modules_extras['arguments'][#{index}] must contain keys \"name\" and \"value\""
-           end %>
-  <%=      argument['name'] %>="<%= argument['value'] %>"
-<%       end
-       end -%>
-)
+<%
+if scope.lookupvar('rsyslogv8::modules_extras') and scope.lookupvar('rsyslogv8::modules_extras') != :undef
+     scope.lookupvar('rsyslogv8::modules_extras').each_pair do |name, data|
+-%>
+<%=    scope.function_sub_template_call([ 'rsyslogv8/module.erb', { 'name' => name, 'rsysmodule' => data } ]) -%>
 <%   end -%>
 <% end -%>
 
-module(load="builtin:omfile"
- fileOwner="<%= scope.lookupvar('rsyslogv8::log_user') %>"
- fileGroup="<%= scope.lookupvar('rsyslogv8::log_group') %>"
- fileCreateMode="<%= scope.lookupvar('rsyslogv8::perm_file') %>"
- dirOwner="<%= scope.lookupvar('rsyslogv8::log_user') %>"
- dirGroup="<%= scope.lookupvar('rsyslogv8::log_group') %>"
- dirCreateMode="<%= scope.lookupvar('rsyslogv8::perm_dir') %>"
-<%- if scope.lookupvar('rsyslogv8::default_template')  and scope.lookupvar('rsyslogv8::default_template') != :undef %>
- template="<%= scope.lookupvar('rsyslogv8::default_template') %>"
-<% end -%>
-)
+<%= scope.function_sub_template_call([ 'rsyslogv8/module.erb', { 'name' => 'builtin:omfile', 'rsysmodule' => {'comment' => 'Generated from global parameters'} }]) -%>
 
 #
 # Include all config files in <%= scope.lookupvar('rsyslogv8::rsyslog_d') %>
