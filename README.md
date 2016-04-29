@@ -143,6 +143,26 @@ rsyslogv8::config::ship { 'secure-log-server.example.com':
 
 ## Reference
 
+### Functions
+
+#### `sub_template_call`
+
+Extended version of puppet template call.
+Takes two arguments
+ * the template name
+ * the hash of instance variables that will be available in the template
+
+Example:
+``` puppet
+$content = sub_template_call(
+  'my_module/my_content_template.erb',
+  {
+    'variable1' => 'value1',
+    'variable2' => [ 1, 2, 3 ]
+  }
+)
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
