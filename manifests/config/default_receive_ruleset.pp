@@ -60,8 +60,56 @@ class rsyslogv8::config::default_receive_ruleset (
     },
   ]
 
+  $templates = [
+    {
+      'name'   => 'receiveAuthFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/auth.log",
+    },
+    {
+      'name'   => 'receiveSyslogFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/syslog",
+    },
+    {
+      'name'   => 'receiveCronFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/cron.log",
+    },
+    {
+      'name'   => 'receiveDaemonFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/daemon.log",
+    },
+    {
+      'name'   => 'receiveKernFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/kern.log",
+    },
+    {
+      'name'   => 'receiveMailFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/mail.log",
+    },
+    {
+      'name'   => 'receiveUserFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/user.log",
+    },
+    {
+      'name'   => 'receiveDebugFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/debug",
+    },
+    {
+      'name'   => 'receiveMessagesFile',
+      'type'   => 'string',
+      'string' => "${base_dir}/%source:R,ERE,1,DFLT:([A-Za-z0-9.-]*)--end%/messages",
+    },
+  ]
+
   rsyslogv8::config::snippet { 'default_receive_ruleset':
     priority => '00',
-    content  => template("${module_name}/config/receive-templates.erb", "${module_name}/config/ruleset.erb"),
+    content  => template("${module_name}/config/templates.erb", "${module_name}/config/ruleset.erb"),
   }
 }
