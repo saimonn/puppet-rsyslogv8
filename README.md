@@ -176,6 +176,18 @@ $output3 = is_log_level(4) # == is_log_level('info') == true
 
 ```
 
+#### `get_log_level_number`
+Transform the rsyslog severity name into the integer ID of that severity level.
+
+Takes one argument, can be either the severity integer ID, or the name, returns the severity integer ID, or nil.
+
+Example:
+``` puppet
+$output1 = get_log_level_number('foo') # == nil
+$output2 = get_log_level_number('warning') # == 4
+$output3 = get_log_level_number(2) # == get_log_level_number('crit') == 2
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
