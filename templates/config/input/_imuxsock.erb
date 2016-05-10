@@ -1,0 +1,70 @@
+  name="<%= @input['name'] %>"
+<%if @input.fetch('ruleset', nil) != nil and @input['ruleset'] != :undef -%>
+<%  raise Puppet::ParseError, "ruleset must be a String in input #{@input['name']}" unless @input['ruleset'].is_a? String -%>
+  ruleset="<%= @input['ruleset'] %>"
+<%end -%>
+<%if @input.fetch('IgnoreTimestamp', nil) != nil and @input['IgnoreTimestamp'] != :undef -%>
+<%  raise Puppet::ParseError, "IgnoreTimestamp must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['IgnoreTimestamp'] ]) -%>
+  IgnoreTimestamp="<%= @input['IgnoreTimestamp'] or @input['IgnoreTimestamp'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('IgnoreOwnMessages', nil) != nil and @input['IgnoreOwnMessages'] != :undef -%>
+<%  raise Puppet::ParseError, "IgnoreOwnMessages must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['IgnoreOwnMessages'] ]) -%>
+  IgnoreOwnMessages="<%= @input['IgnoreOwnMessages'] or @input['IgnoreOwnMessages'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('FlowControl', nil) != nil and @input['FlowControl'] != :undef -%>
+<%  raise Puppet::ParseError, "FlowControl must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['FlowControl'] ]) -%>
+  FlowControl="<%= @input['FlowControl'] or @input['FlowControl'] =='true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('RateLimit.Interval', nil) != nil and @input['RateLimit.Interval'] != :undef -%>
+<%  raise Puppet::ParseError, "RateLimit.Interval must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['RateLimit.Interval'] ]) -%>
+ RateLimit.Interval="<%= @input['RateLimit.Interval'] %>"
+<%end -%>
+<%if @input.fetch('RateLimit.Burst', nil) != nil and @input['RateLimit.Burst'] != :undef -%>
+<%  raise Puppet::ParseError, "RateLimit.Burst must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['RateLimit.Burst'] ]) -%>
+ RateLimit.Burst="<%= @input['RateLimit.Burst'] %>"
+<%end -%>
+<%if @input.fetch('RateLimit.Severity', nil) != nil and @input['RateLimit.Severity'] != :undef -%>
+<%  raise Puppet::ParseError, "RateLimit.Severity must be a String or a number given #{@input['RateLimit.Severity'].class.name} in input #{@input['name']}" unless ( @input['RateLimit.Severity'].is_a? String or @input['RateLimit.Severity'].is_a? Integer ) -%>
+<%  raise Puppet::ParseError, "RateLimit.Severity must be a valid severity given #{@input['RateLimit.Severity']} in input #{@input['name']}" unless scope.function_is_log_level([ @input['RateLimit.Severity'] ]) -%>
+ RateLimit.Severity="<%= @input['RateLimit.Severity'] %>"
+<%end -%>
+<%if @input.fetch('UsePIDFromSystem', nil) != nil and @input['UsePIDFromSystem'] != :undef -%>
+<%  raise Puppet::ParseError, "UsePIDFromSystem must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['UsePIDFromSystem'] ]) -%>
+  UsePIDFromSystem="<%= @input['UsePIDFromSystem'] or @input['UsePIDFromSystem'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('UseSysTimeStamp', nil) != nil and @input['UseSysTimeStamp'] != :undef -%>
+<%  raise Puppet::ParseError, "UseSysTimeStamp must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['UseSysTimeStamp'] ]) -%>
+  UseSysTimeStamp="<%= @input['UseSysTimeStamp'] or @input['UseSysTimeStamp'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('CreatePath', nil) != nil and @input['CreatePath'] != :undef -%>
+<%  raise Puppet::ParseError, "CreatePath must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['CreatePath'] ]) -%>
+  CreatePath="<%= @input['CreatePath'] or @input['CreatePath'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('Socket', nil) != nil and @input['Socket'] != :undef -%>
+<%  raise Puppet::ParseError, "Socket must be a String in input #{@input['name']}" unless @input['Socket'].is_a? String -%>
+  Stringath="<%= @input['Stringath'] %>"
+<%end -%>
+<%if @input.fetch('HostName', nil) != nil and @input['HostName'] != :undef -%>
+<%  raise Puppet::ParseError, "HostName must be a String in input #{@input['name']}" unless @input['HostName'].is_a? HostName -%>
+  HostName="<%= @input['HostName'] %>"
+<%end -%>
+<%if @input.fetch('Annotate', nil) != nil and @input['Annotate'] != :undef -%>
+<%  raise Puppet::ParseError, "Annotate must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['Annotate'] ]) -%>
+  Annotate="<%= @input['Annotate'] or @input['Annotate'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('ParseTrusted', nil) != nil and @input['ParseTrusted'] != :undef -%>
+<%  raise Puppet::ParseError, "ParseTrusted must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['ParseTrusted'] ]) -%>
+  ParseTrusted="<%= @input['ParseTrusted'] or @input['ParseTrusted'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('Unlink', nil) != nil and @input['Unlink'] != :undef -%>
+<%  raise Puppet::ParseError, "Unlink must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['Unlink'] ]) -%>
+  Unlink="<%= @input['Unlink'] or @input['Unlink'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('useSpecialParser', nil) != nil and @input['useSpecialParser'] != :undef -%>
+<%  raise Puppet::ParseError, "useSpecialParser must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['useSpecialParser'] ]) -%>
+  useSpecialParser="<%= @input['useSpecialParser'] or @input['useSpecialParser'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('parseHostname', nil) != nil and @input['parseHostname'] != :undef -%>
+<%  raise Puppet::ParseError, "parseHostname must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['parseHostname'] ]) -%>
+  parseHostname="<%= @input['parseHostname'] or @input['parseHostname'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
