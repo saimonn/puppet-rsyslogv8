@@ -1,0 +1,64 @@
+<%if @module_args.fetch('AddtlFrameDelimiter', nil) != nil and @module_args['AddtlFrameDelimiter'] != :undef -%>
+ AddtlFrameDelimiter="<%= @module_args['AddtlFrameDelimiter'] %>"
+<%end -%>
+<%if @module_args.fetch('DisableLFDelimiter', nil) != nil and @module_args['DisableLFDelimiter'] != :undef -%>
+<% raise Puppet::ParseError, "DisableLFDelimiter must be a Boolean given #{modules_args['DisableLFDelimiter'].class.name}" unless scope.function_is_bool([ @module_args['DisableLFDelimiter'] ]) -%>
+ DisableLFDelimiter="<%= @module_args['DisableLFDelimiter'] or @module_args['DisableLFDelimiter'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('NotifyOnConnectionClose', nil) != nil and @module_args['NotifyOnConnectionClose'] != :undef -%>
+<% raise Puppet::ParseError, "NotifyOnConnectionClose must be a Boolean given #{modules_args['NotifyOnConnectionClose'].class.name}" unless scope.function_is_bool([ @module_args['NotifyOnConnectionClose'] ]) -%>
+ NotifyOnConnectionClose="<%= @module_args['NotifyOnConnectionClose'] or @module_args['NotifyOnConnectionClose'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('KeepAlive', nil) != nil and @module_args['KeepAlive'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive must be a Boolean given #{modules_args['KeepAlive'].class.name}" unless scope.function_is_bool([ @module_args['KeepAlive'] ]) -%>
+ KeepAlive="<%= @module_args['KeepAlive'] or @module_args['KeepAlive'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('KeepAlive.Probes', nil) != nil and @module_args['KeepAlive.Probes'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive.Probes must be a Boolean given #{modules_args['KeepAlive.Probes'].class.name}" unless scope.function_is_integer([ @module_args['KeepAlive.Probes'] ]) -%>
+ KeepAlive.Probes="<%= @module_args['KeepAlive.Probes'] %>"
+<%end -%>
+<%if @module_args.fetch('KeepAlive.Interval', nil) != nil and @module_args['KeepAlive.Interval'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive.Interval must be a Boolean given #{modules_args['KeepAlive.Interval'].class.name}" unless scope.function_is_integer([ @module_args['KeepAlive.Interval'] ]) -%>
+ KeepAlive.Interval="<%= @module_args['KeepAlive.Interval'] %>"
+<%end -%>
+<%if @module_args.fetch('KeepAlive.Time', nil) != nil and @module_args['KeepAlive.Time'] != :undef  -%>
+<% raise Puppet::ParseError, "KeepAlive.Time must be a Boolean given #{modules_args['KeepAlive.Time'].class.name}" unless scope.function_is_integer([ @module_args['KeepAlive.Time'] ])-%>
+ KeepAlive.Time="<%= @module_args['KeepAlive.Time'] %>"
+<%end -%>
+<%if @module_args.fetch('FlowControl', nil) != nil and @module_args['FlowControl'] != :undef  -%>
+<% raise Puppet::ParseError, "FlowControl must be a Boolean given #{modules_args['FlowControl'].class.name}" unless scope.function_is_bool([ @module_args['FlowControl'] ]) -%>
+ FlowControl="<%= @module_args['FlowControl'] or @module_args['FlowControl'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('MaxListeners', nil) != nil and @module_args['MaxListeners'] != :undef  -%>
+<% raise Puppet::ParseError, "MaxListeners must be a Boolean given #{modules_args['MaxListeners'].class.name}" unless scope.function_is_integer([ @module_args['MaxListeners'] ]) -%>
+ MaxListeners="<%= @module_args['MaxListeners'] %>"
+<%end -%>
+<%if @module_args.fetch('MaxSessions', nil) != nil and @module_args['MaxSessions'] != :undef  -%>
+<% raise Puppet::ParseError, "MaxSessions must be a Boolean given #{modules_args['MaxSessions'].class.name}" unless scope.function_is_integer([ @module_args['MaxSessions'] ]) -%>
+ MaxSessions="<%= @module_args['MaxSessions'] %>"
+<%end -%>
+<%if scope.lookupvar('::rsyslogv8::ssl') != nil and scope.lookupvar('::rsyslogv8::ssl') != :udef and scope.lookupvar('::rsyslogv8::ssl') -%>
+ StreamDriver.Mode="1"
+<%  if @module_args.fetch('auth', nil) != nil and @module_args['auth'] != :undef -%>
+ StreamDriver.AuthMode="<%= @module_args['auth'] %>"
+<%    if @module_args.fetch('authorised_peers', nil) != nil and @module_args['authorised_peers'] != :undef and @module_args['auth'] == 'x509/name' -%>
+<%      raise Puppet::ParseError, "authorised_peers must be an Array of Strings or a String given #{modules_args['authorised_peers'].class.name}" unless ( @module_args['authorised_peers'].is_a? Array or @module_args['authorised_peers'].is_a? String ) -%>
+ PermittedPeer=<%
+        if modules_args['authorised_peers'].is_a? Array
+-%>
+[
+<%
+          modules_args['authorised_peers'].each_index do |i|
+            raise Puppet::ParseError, "authorised_peers[#{i} must be a string given #{modules_args['authorised_peers'][i].class.name}" unless modules_args['authorised_peers'][i].is_a? String
+-%>
+  "<%=       modules_args['authorised_peers'][i] %>"<% if i < ( modules_args['authorised_peers'].length - 1) %>,<% end %>
+<%        end %>
+]
+<%      else -%>
+"<%=      @module_args['authorised_peers'] %>"
+<%      end -%>
+<%    else -%>
+<%      raise Puppet::ParseError, "must define remote_authorised_peers when authenticating hosts" -%>
+<%    end -%>
+<%  end -%>
+<%end -%>
