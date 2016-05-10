@@ -210,6 +210,17 @@ $output1 = is_read_mode('foo') # == false
 $output2 = is_read_mode(1) # == is_read_mode('paragraph') == true
 ```
 
+#### `get_read_mode_number`
+Transform the rsyslog read mode name into the integer ID of that read mode.
+
+Takes one argument, can be either the read mode integer ID, or the name, returns the read mode integer ID, or nil.
+
+Example:
+``` puppet
+$output1 = get_read_mode_number('foo') # == nil
+$output2 = get_read_mode_number(0) # == get_read_mode_number('line') == 0
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
