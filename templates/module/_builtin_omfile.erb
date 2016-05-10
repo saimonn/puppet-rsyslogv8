@@ -1,0 +1,9 @@
+ fileOwner="<%=     @scope.lookupvar('::rsyslogv8::log_user')  %>"
+ fileGroup="<%=     @scope.lookupvar('::rsyslogv8::log_group') %>"
+ fileCreateMode="<%=@scope.lookupvar('::rsyslogv8::perm_file') %>"
+ dirOwner="<%=      @scope.lookupvar('::rsyslogv8::log_user')  %>"
+ dirGroup="<%=      @scope.lookupvar('::rsyslogv8::log_group') %>"
+ dirCreateMode="<%= @scope.lookupvar('::rsyslogv8::perm_dir')  %>"
+<%if @scope.lookupvar('::rsyslogv8::default_template') and scope.lookupvar('::rsyslogv8::default_template') != :undef -%>
+ template="<%=     @scope.lookupvar('::rsyslogv8::default_template') %>"
+<%end -%>
