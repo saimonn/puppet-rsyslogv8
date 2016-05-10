@@ -1,0 +1,12 @@
+<%if @module_args.fetch('SysSock.RateLimit.Interval', nil) != nil and @module_args['SysSock.RateLimit.Interval'] != :undef -%>
+<%  raise Puppet::ParseError, "SysSock.RateLimit.Interval must be a Integer" unless scope.function_is_integer([ @module_args['SysSock.RateLimit.Interval'] ]) -%>
+ SysSock.RateLimit.Interval="<%= @module_args['SysSock.RateLimit.Interval'] %>"
+<%end -%>
+<%if @module_args.fetch('SysSock.RateLimit.Burst', nil)!= nil and @module_args['SysSock.RateLimit.Burst'] != :undef  -%>
+<%  raise Puppet::ParseError, "SysSock.RateLimit.Burst must be a Integer" unless scope.function_is_integer([ @module_args['SysSock.RateLimit.Burst'] ]) -%>
+ SysSock.RateLimit.Burst="<%= @module_args['SysSock.RateLimit.Burst'] %>"
+<%end -%>
+<%if @module_args.fetch('SysSock.Name', nil)!= nil and @module_args['SysSock.Name'] != :undef  -%>
+<%  raise Puppet::ParseError, "SysSock.Name must be a String" unless @module_args['SysSock.Name'].is_a? String -%>
+ SysSock.Name="<%= @module_args['SysSock.Name'] %>"
+<%end -%>
