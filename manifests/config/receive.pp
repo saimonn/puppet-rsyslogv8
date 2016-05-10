@@ -33,40 +33,12 @@ define rsyslogv8::config::receive (
   $override_ssl_key        = false,
   $port                    = undef,
 ) {
-  include ::rsyslogv8::config::receive_templates
   # Input checking
-  if $queue_size_limit != undef and ! is_integer($queue_size_limit) {
-    fail('parameter queue_size_limit must be an integer or undef')
-  }
-  if $queue_batch_size != undef and ! is_integer($queue_batch_size) {
-    fail('parameter queue_batch_size must be an integer or undef')
-  }
-  if ! is_integer($enqueue_timeout) {
-    fail('parameter enqueue_timeout must be an integer or undef')
-  }
   if ! is_string($queue_mode) {
     fail('parameter queue_mode must be a string')
   }
-  if ! is_string($queue_max_disk_space) {
-    fail('parameter queue_max_disk_space must be a string')
-  }
-  if ! is_bool($queue_save_on_shutdown) {
-    fail('parameter queue_save_on_shutdown must be a boolean')
-  }
-  if ! is_string($queue_filename) {
-    fail('parameter queue_filename must be a string')
-  }
-
   if ! is_string($protocol) {
     fail('parameter protocol must be a string')
-  }
-
-  if ! is_string($remote_auth) {
-    fail('parameter remote_auth must be a string')
-  }
-
-  if $remote_authorised_peers != undef and ( (! is_array($remote_authorised_peers)) or empty($remote_authorised_peers) ) {
-    fail('parameter remote_authorised_peers must be an non-empty array or undef')
   }
 
   if $ruleset_name != undef and ! is_string($ruleset_name) {
@@ -86,157 +58,53 @@ define rsyslogv8::config::receive (
     validate_absolute_path($override_ssl_cert)
   }
 
-
-  if $port != undef and ! is_integer($port) {
-    fail('parameter port must be an integer or undef')
-  }
-
   # Local variables definitions for template and semantic checking of input
   case $queue_mode {
     'LinkedList-DA': {
       $_queue_mode = 'LinkedList'
-      $_queue_disk = true
+      $_queue_filename = $queue_filename
     }
     'LinkedList': {
       $_queue_mode = 'LinkedList'
-      $_queue_disk = false
+      $_queue_filename = undef
     }
     'Disk': {
       $_queue_mode = 'Disk'
-      $_queue_disk = true
+      $_queue_filename = $queue_filename
     }
     'FixedArray': {
       $_queue_mode = 'FixedArray'
-      $_queue_disk = false
+      $_queue_filename = undef
     }
     'FixedArray-DA': {
       $_queue_mode = 'FixedArray'
-      $_queue_disk = true
+      $_queue_filename = $queue_filename
     }
     default: {
       fail("unknown value '${queue_mode}' for parameter queue_mode")
     }
   }
 
-  if $override_ssl != undef {
-    $_ssl = $override_ssl
-  } else {
-    $_ssl = $rsyslogv8::ssl
-  }
-
-  if $override_ssl_ca != false {
-    $_real_ca = $override_ssl_ca
-  } else {
-    $_real_ca = $::rsyslogv8::ssl_ca
-  }
-
-  if $override_ssl_key != false {
-    $_real_key = $override_ssl_key
-  } else {
-    $_real_key = $::rsyslogv8::ssl_key
-  }
-
-  if $override_ssl_cert != false {
-    $_real_cert = $override_ssl_cert
-  } else {
-    $_real_cert = $::rsyslogv8::ssl_cert
-  }
-
-  case $remote_auth {
-    'anon': {
-      if $remote_authorised_peers {
-        fail('cannot have peer list in anon auth mode')
-      }
-    }
-    'x509/name': {
-      if ! $_ssl {
-        fail('::rsyslogv8::ssl or override_ssl must be enabled to authenticate using x509/name')
-      }
-      if $remote_authorised_peers == undef {
-        fail('must define remote_authorised_peers when authenticating hosts')
-      }
-    }
-    default: {
-      fail("unknown value '${remote_auth}' for parameter remote_auth")
-    }
-  }
-
   case $protocol {
     'tcp': {
       $_imodule = 'imtcp'
-      $_remote_authorised_peers_real_option_name = undef
-      $_remote_auth_real_option_name = undef
-      $_remote_auth_real_mode = undef
-      case $remote_auth {
-        'anon': {
-        }
-        default: {
-          fail("To setup Authentication of remote host set imtcp global parameters StreamDriver.AuthMode='${remote_auth}' and PermittedPeer='${remote_authorised_peers}'")
-        }
+      if $override_ssl != undef {
+        fail('cannot override ssl parameters for plain tcp connection consider using ssl globally or imrelp')
       }
-      $_ssl_extra_options = undef
-      if $override_ssl != undef or $override_ssl_cert or $override_ssl_key or $override_ssl_ca {
-        fail('cannot override ssl parameters for plain tcp connection consider using relp if you really want this feature')
-      }
-      if $_ssl {
-        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
-          notice("TLS with relp might not work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
-        }
+      if $remote_auth != 'anon' or $remote_authorised_peers != undef {
+        fail('cannot override TCP auth settings per listen point, set the global parameters of the imtcp module')
       }
     }
 
     'relp': {
       $_imodule = 'imrelp'
-      $_remote_authorised_peers_real_option_name = 'tls.permittedpeer'
-      $_remote_auth_real_option_name = 'tls.authMode'
-      if $_real_ca {
-        $__ssl_extra_options_ca = " tls.caCert=\"${_real_ca}\"\n"
-      } else {
-        $__ssl_extra_options_ca = undef
-      }
-      if $_real_key {
-        $__ssl_extra_options_key = " tls.myPrivKey=\"${_real_key}\"\n"
-      } else {
-        $__ssl_extra_options_key = undef
-      }
-      if $_real_cert {
-        $__ssl_extra_options_cert = " tls.myCert=\"${_real_cert}\"\n"
-      } else {
-        $__ssl_extra_options_cert = undef
-      }
-      case $remote_auth {
-        'anon': {
-          $_remote_auth_real_mode = undef
-        }
-        'x509/name': {
-          $_remote_auth_real_mode = 'name'
-        }
-        default: {
-          fail('do not know what to do with remote_auth value, please fix it')
-        }
-      }
-      if $_ssl {
-        $__ssl_extra_options_enable = " tls=\"on\"\n"
-        if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
-          fail("TLS with relp does NOT work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
-        }
-      } else {
-        $__ssl_extra_options_enable = " tls=\"off\"\n"
-      }
-      $_ssl_extra_options = "${__ssl_extra_options_enable}${__ssl_extra_options_ca}${__ssl_extra_options_key}${__ssl_extra_options_cert}"
     }
 
     'udp': {
       $_imodule = 'imudp'
-      $_remote_auth_real_option_name = undef
-      if $remote_auth != 'anon' {
-        fail('cannot authenticate hosts using udp, use tcp or relp instead')
+      if $::rsyslogv8::ssl or $override_ssl {
+        fail('TLS cannot be enabled using UDP consider using imrelp or imtcp')
       }
-      if $_ssl {
-        fail('TLS cannot be enabled using UDP use tcp or relp instead')
-      }
-      $_ssl_extra_options = undef
-      $_remote_auth_real_mode = $remote_auth
     }
 
     default: {
@@ -245,11 +113,10 @@ define rsyslogv8::config::receive (
   }
 
   if $ruleset_name != undef {
-    $_define_local_ruleset = false
     $_real_ruleset_name = $ruleset_name
   } else {
-    $_define_local_ruleset = true
-    $_real_ruleset_name = "input-${protocol}-${title}"
+    include ::rsyslogv8::config::default_receive_ruleset
+    $_real_ruleset_name = 'default_receive_ruleset'
   }
 
   # create config snippet using template
