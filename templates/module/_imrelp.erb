@@ -1,0 +1,4 @@
+<% if @module_args.fetch('Ruleset', nil) != nil and @module_args['Ruleset'] != :undef -%>
+<% raise Puppet::ParseError, "Ruleset must be a String given #{@module_args['Ruleset'].class.name}" unless @module_args['Ruleset'].is_a? String -%>
+ Ruleset="<%= @module_args['Ruleset'] %>"
+<% end -%>
