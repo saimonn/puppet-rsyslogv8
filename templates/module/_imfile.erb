@@ -1,0 +1,16 @@
+<%if @module_args.fetch('mode', nil) and @module_args['mode'] != :undef -%>
+<%
+    case @module_args['mode']
+      when 'polling'
+        if @module_args.fetch('PollingInterval', nil) and @module_args['PollingInterval'] != :undef
+-%>
+ PollingInterval="<%= @module_args['PollingInterval'] %>"
+<%
+        end 
+      when 'inotify'
+      else
+        raise Puppet::ParseError, "unknown imfile mode #{@module_args['mode']}"
+    end
+-%>
+ mode="<%= @module_args['mode'] %>"
+<%end -%>
