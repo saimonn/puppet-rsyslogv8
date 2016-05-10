@@ -163,6 +163,19 @@ $content = sub_template_call(
 )
 ```
 
+#### `is_log_level`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog severity or `false` otherwise.
+
+The input can be either an integer for the severity ID, or the name of the severity e.g. 'info', 'error', ...
+
+Example:
+``` puppet
+$output1 = is_log_level('foo') # == false
+$output2 = is_log_level('warning') # == true
+$output3 = is_log_level(4) # == is_log_level('info') == true
+
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
