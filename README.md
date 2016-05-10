@@ -188,6 +188,17 @@ $output2 = get_log_level_number('warning') # == 4
 $output3 = get_log_level_number(2) # == get_log_level_number('crit') == 2
 ```
 
+#### `is_facility`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog facility or `false` otherwise.
+
+The input can be either and integer for the facility ID, or the name of the severity e.g. 'kern', ...
+
+Example:
+``` puppet
+$output1 = is_facility('foo') # == false
+$output2 = is_facility(10) # == is_facility('security') == true
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
