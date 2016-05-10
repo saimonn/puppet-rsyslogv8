@@ -199,6 +199,17 @@ $output1 = is_facility('foo') # == false
 $output2 = is_facility(10) # == is_facility('security') == true
 ```
 
+#### `is_read_mode`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog file read mode or `false` otherwise.
+
+The input can be either an integer for the read mode ID, or the name of the mode e.g. 'line', ...
+
+Example:
+``` puppet
+$output1 = is_read_mode('foo') # == false
+$output2 = is_read_mode(1) # == is_read_mode('paragraph') == true
+```
+
 ### Public Classes
 
 #### Class rsyslogv8
