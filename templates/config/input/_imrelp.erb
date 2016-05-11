@@ -1,0 +1,89 @@
+  name="<%= @input['name'] %>"
+<%if @input.fetch('ruleset', nil) != nil and @input['ruleset'] != :undef -%>
+<%  raise Puppet::ParseError, "ruleset must be a String in input #{@input['name']}" unless @input['ruleset'].is_a? String -%>
+  ruleset="<%= @input['ruleset'] %>"
+<%end -%>
+<%if @input.fetch('port', nil) != nil and @input['port'] != :undef -%>
+<%  raise Puppet::ParseError, "port must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['port'] ]) -%>
+  Port="<%= @input['port'] %>"
+<%end -%>
+<%if @input.fetch('CreatePath', nil) != nil and @input['CreatePath'] != :undef -%>
+<%  raise Puppet::ParseError, "CreatePath must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['CreatePath'] ]) -%>
+  CreatePath="<%= @input['CreatePath'] or @input['CreatePath'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%
+  # Black magic to set correctly the SSL options of rsyslog with local options overriding global options
+
+  # Choose if we want to enable SSL
+  if @input.fetch('ssl', nil) != nil and @input['ssl'] != :undef -%>
+<%  raise Puppet::ParseError, "ssl parameter must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['ssl'] ]) -%>
+<%  # if overridden locally, chose local option
+    __ssl = @input['ssl'] or @input['ssl'] == 'true'
+  else
+    # not overridden locally, choose global parameter
+    __ssl = scope.lookupvar('::rsyslogv8::ssl')
+  end
+-%>
+  tls="<%= __ssl ? 'on' : 'off' %>"
+<%if __ssl
+    # we want ssl
+    if scope.lookupvar('::osfamily') == 'RedHat' and ( scope.lookupvar('::operatingsystemmajrelease') == '5' or scope.lookupvar('::operatingsystemmajrelease') == '6' )
+      raise Puppet::ParseError, "TLS with relp does NOT work in #{scope.lookupvar('::operatingsystem')}#{scope.lookupvar('::operatingsystemmajrelease')} due to an old version of gnutls"
+      #scope.function_notice(["TLS with relp might not work in #{scope.lookupvar('::operatingsystem')}#{scope.lookupvar('::operatingsystemmajrelease')} due to an old version of gnutls"])
+    end
+    if @input.fetch('tls.compression', nil) != nil and @input['tls.compression'] != :undef -%>
+<%    raise Puppet::ParseError, "tls.compression must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['tls.compression'] ]) -%>
+  tls.compression="<%= @input['tls.compression'] or @input['tls.compression'] == 'true' ? 'on' : 'off' %>"
+<%  end -%>
+<%  if @input.fetch('tls.dhbits', nil) != nil and @input['tls.dhbits'] != :undef -%>
+<%    raise Puppet::ParseError, "tls.dhbits must be an Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['tls.dhbits'] ]) -%>
+  tls.dhbits="<%= @input['tls.dhbits'] %>"
+<%  end -%>
+<%  if @input.fetch('auth', nil) != nil and @input['auth'] != :undef -%>
+<%    raise Puppet::ParseError, "auth must be a String in input #{@input['name']}" unless @input['auth'].is_a? String -%>
+<%    if @input['auth'] == 'x509/name' -%>
+  tls.authMode="name"
+<%      if @input.fetch('authorised_peers', nil) != nil and @input['authorised_peers'] != :undef -%>
+<%        raise Puppet::ParseError, "authorised_peers must be an Array of Strings or a String in input #{@input['name']}" unless ( @input['authorised_peers'].is_a? Array or @input['authorised_peers'].is_a? String ) -%>
+  tls.permittedPeer=<%
+          if @input['authorised_peers'].is_a? Array
+-%>
+[
+<%          @input['authorised_peers'].each_index do |i| -%>
+"<%=          @input['authorised_peers'][i] %>"<% if i < (@input['authorised_peers'].length - 1) %>,<% end %>
+<%          end -%>
+  ]
+<%        else -%>
+  "<%=      @input['authorised_peers'] %>"
+<%        end -%>
+<%
+        else
+          raise Puppet::ParseError, "must define remote_authorised_peers when authenticating hosts in input #{@input['name']}"
+        end
+      elsif @input['auth'] == 'anon'
+      else
+        raise Puppet::ParseError, "unknown auth value #{@input['auth']} in input #{@input['name']}"
+      end
+    end
+  end
+-%>
+<%if @input.fetch('tls.prioritystring', nil) != nil and @input['tls.prioritystring'] != :undef -%>
+<% raise Puppet::ParseError, "tls.prioritystring must be a String in input #{@input['name']}" unless @input['tls.prioritystring'].is_a? String -%>
+  tls.prioritystring="<%= @input['tls.prioritystring'] %>"
+<%end -%>
+<%if @input.fetch('KeepAlive', nil) != nil and @input['KeepAlive'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive must be a Boolean given #{@input['KeepAlive'].class.name} in input #{@input['name']}" unless scope.function_is_bool([ @input['KeepAlive'] ]) -%>
+  KeepAlive="<%= @input['KeepAlive'] or @input['KeepAlive'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('KeepAlive.Probes', nil) != nil and @input['KeepAlive.Probes'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive.Probes must be a Integer given #{@input['KeepAlive.Probes'].class.name} in input #{@input['name']}" unless scope.function_is_integer([ @input['KeepAlive.Probes'] ]) -%>
+  KeepAlive.Probes="<%= @input['KeepAlive.Probes'] %>"
+<%end -%>
+<%if @input.fetch('KeepAlive.Interval', nil) != nil and @input['KeepAlive.Interval'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive.Interval must be a Integer given #{@input['KeepAlive.Interval'].class.name} in input #{@input['name']}" unless scope.function_is_integer([ @input['KeepAlive.Interval'] ]) -%>
+  KeepAlive.Interval="<%= @input['KeepAlive.Interval'] %>"
+<%end -%>
+<%if @input.fetch('KeepAlive.Time', nil) != nil and @input['KeepAlive.Time'] != :undef -%>
+<% raise Puppet::ParseError, "KeepAlive.Time must be a Integer given #{@input['KeepAlive.Time'].class.name} in input #{@input['name']}" unless scope.function_is_integer([ @input['KeepAlive.Time'] ]) -%>
+  KeepAlive.Time="<%= @input['KeepAlive.Time'] %>"
+<%end -%> 
