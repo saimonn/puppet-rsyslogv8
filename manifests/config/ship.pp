@@ -36,7 +36,7 @@ define rsyslogv8::config::ship (
   $override_ssl_cert       = false,
   $override_ssl_key        = false,
 ) {
-  # Input checkint
+  # Input checking
   if ! is_string($remote_host) and ! ( is_domain_name($remote_host) or is_ip_address($remote_host) ){
     fail('parameter remote_host must be a hostname/fqdn or an ip address')
   }
@@ -117,62 +117,17 @@ define rsyslogv8::config::ship (
     }
   }
 
-  if $override_ssl != undef {
-    $_ssl = $override_ssl
-  } else {
-    $_ssl = $rsyslogv8::ssl
-  }
-
-  if $override_ssl_ca != false {
-    $_real_ca = $override_ssl_ca
-  } else {
-    $_real_ca = $::rsyslogv8::ssl_ca
-  }
-
-  if $override_ssl_key != false {
-    $_real_key = $override_ssl_key
-  } else {
-    $_real_key = $::rsyslogv8::ssl_key
-  }
-
-  if $override_ssl_cert != false {
-    $_real_cert = $override_ssl_cert
-  } else {
-    $_real_cert = $::rsyslogv8::ssl_cert
-  }
-
-  case $remote_auth {
-    'anon': {
-    }
-    'x509/name': {
-      if ! ( $_ssl ) {
-        fail('::rsyslogv8::ssl or override_ssl must be enabled to authenticate using x509/name')
-      }
-    }
-    default: {
-      fail("unknown value '${remote_auth}' for parameter remote_auth")
-    }
-  }
-
   case $protocol {
     'tcp': {
       if $override_ssl != undef or $override_ssl_cert or $override_ssl_key or $override_ssl_ca {
         fail('cannot override ssl parameters for plain tcp connection consider using relp if you really want this feature')
       }
-      if $_ssl {
-        $__ssl_extra_options_enable = "StreamDriver=\"gtls\"\n StreamDriverMode=\"1\"\n"
+      if $override_ssl or ( $override_ssl == undef and $::rsyslogv8::ssl ) {
         if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6') {
           notice("TLS with relp might not work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
         }
-      } else {
-        $__ssl_extra_options_enable = "StreamDriver=\"ptcp\"\n"
       }
       $_omodule = 'omfwd'
-      $_omodule_extra_opts = " Protocol=\"tcp\""
-      $_remote_auth_real_option_name = 'StreamDriverAuthMode'
-      $_remote_authorised_peers_real_option_name = 'StreamDriverPermittedPeers'
-      $_ssl_extra_options = $__ssl_extra_options_enable
-      $_remote_auth_real_mode = $remote_auth
       if is_array($remote_authorised_peers) {
         fail('in tcp, remote_authorised_peers must be a string for a single FQDN/IP')
       }
@@ -180,54 +135,18 @@ define rsyslogv8::config::ship (
 
     'relp': {
       $_omodule = 'omrelp'
-      $_omodule_extra_opts = undef
-      $_remote_auth_real_option_name = 'tls.authMode'
-      $_remote_authorised_peers_real_option_name = 'tls.permittedpeer'
-      $__ssl_extra_options_ca   = " tls.caCert=\"${_real_ca}\"\n"
-      if $_real_key {
-        $__ssl_extra_options_key  = " tls.myPrivKey=\"${_real_key}\"\n"
-      } else {
-        $__ssl_extra_options_key = undef
-      }
-      if $_real_cert {
-        $__ssl_extra_options_cert = " tls.myCert=\"${_real_cert}\"\n"
-      } else {
-        $__ssl_extra_options_cert = undef
-      }
-      case $remote_auth {
-        'anon': {
-          $_remote_auth_real_mode = undef
-        }
-        'x509/name': {
-          $_remote_auth_real_mode = 'name'
-        }
-        default: {
-          fail('do not know what to do with remote_auth value, please fix it')
-        }
-      }
-      if $_ssl {
-        $__ssl_extra_options_enable = "tls=\"on\"\n"
+      if $override_ssl or ( $override_ssl == undef and $::rsyslogv8::ssl ) {
         if $::osfamily == 'RedHat' and ( $::operatingsystemmajrelease == '5' or $::operatingsystemmajrelease == '6' ) {
           fail("TLS with relp does NOT work in ${::operatingsystem}${::operatingsystemmajrelease} due to an old version of gnutls")
         }
-      } else {
-        $__ssl_extra_options_enable = "tls=\"off\"\n"
       }
-      $_ssl_extra_options = "${__ssl_extra_options_enable}${__ssl_extra_options_ca}${__ssl_extra_options_key}${__ssl_extra_options_cert}"
     }
 
     'udp': {
-      if $_ssl {
-        fail('cannot use ssl for udp connection consider using relp or tcp for this feature')
-      }
       $_omodule = 'omfwd'
-      $_ssl_extra_options = undef
-      $_omodule_extra_opts =  " Protocol=\"udp\""
       if $remote_auth != 'anon' {
         fail('cannot authenticate hosts in udp consider using relp or tcp for this feature')
       }
-      $_remote_auth_real_option_name = undef
-      $_remote_auth_real_mode = $remote_auth
     }
     default: {
       fail("unsupported protocol '${protocol}'")
