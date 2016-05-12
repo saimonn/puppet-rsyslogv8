@@ -27,6 +27,28 @@
   tls="<%= __ssl ? 'on' : 'off' %>"
 <%if __ssl
     # we want ssl
+    # get correct certificate
+    __my_cert = @input.fetch('ssl_cert', nil)
+    if __my_cert == nil or __my_cert == :undef
+      __my_cert = scope.lookupvar('::rsyslogv8::ssl_cert')
+    end
+    __my_ca = @input.fetch('ssl_ca', nil)
+    if __my_ca == nil or __my_ca == :undef
+      __my_ca = scope.lookupvar('::rsyslogv8::ssl_ca')
+    end
+    __my_key = @input.fetch('ssl_key', nil)
+    if __my_key == nil or __my_key == :undef
+      __my_key = scope.lookupvar('::rsyslogv8::ssl_key')
+    end-%>
+<%  if __my_cert and __my_cert != :undef -%>
+  tls.myCert="<%= __my_cert %>"
+<%  end -%>
+<%  if __my_ca and __my_ca != :undef -%>
+  tls.caCert="<%= __my_ca %>"
+<%  end -%>
+<%  if __my_key and __my_key != :undef -%>
+  tls.myPrivKey="<%= __my_key %>"
+<%  end
     if scope.lookupvar('::osfamily') == 'RedHat' and ( scope.lookupvar('::operatingsystemmajrelease') == '5' or scope.lookupvar('::operatingsystemmajrelease') == '6' )
       raise Puppet::ParseError, "TLS with relp does NOT work in #{scope.lookupvar('::operatingsystem')}#{scope.lookupvar('::operatingsystemmajrelease')} due to an old version of gnutls"
       #scope.function_notice(["TLS with relp might not work in #{scope.lookupvar('::operatingsystem')}#{scope.lookupvar('::operatingsystemmajrelease')} due to an old version of gnutls"])
@@ -50,7 +72,7 @@
 -%>
 [
 <%          @input['authorised_peers'].each_index do |i| -%>
-"<%=          @input['authorised_peers'][i] %>"<% if i < (@input['authorised_peers'].length - 1) %>,<% end %>
+    "<%=      @input['authorised_peers'][i] %>"<% if i < (@input['authorised_peers'].length - 1) %>,<% end %>
 <%          end -%>
   ]
 <%        else -%>
