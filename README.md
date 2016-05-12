@@ -99,7 +99,7 @@ class { 'rsyslogv8':
   modules_extras => {
     'imtcp' => {
       'StreamDriver.AuthMode' => 'x509/name',
-      'PermittedPeer' => "[ \"$host_fqdn_1\", \"$host_fqdn_2\", \"$host_fqdn_3\", \"*.secure-subdomain.example.com\" ]",
+      'PermittedPeer' => [ "$host_fqdn_1", "$host_fqdn_2", "$host_fqdn_3", "*.secure-subdomain.example.com", ],
     },
   },
 }
@@ -142,6 +142,84 @@ rsyslogv8::config::ship { 'secure-log-server.example.com':
 ```
 
 ## Reference
+
+### Functions
+
+#### `sub_template_call`
+
+Extended version of puppet template call.
+Takes two arguments
+ * the template name
+ * the hash of instance variables that will be available in the template
+
+Example:
+``` puppet
+$content = sub_template_call(
+  'my_module/my_content_template.erb',
+  {
+    'variable1' => 'value1',
+    'variable2' => [ 1, 2, 3 ]
+  }
+)
+```
+
+#### `is_log_level`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog severity or `false` otherwise.
+
+The input can be either an integer for the severity ID, or the name of the severity e.g. 'info', 'error', ...
+
+Example:
+``` puppet
+$output1 = is_log_level('foo') # == false
+$output2 = is_log_level('warning') # == true
+$output3 = is_log_level(4) # == is_log_level('info') == true
+
+```
+
+#### `get_log_level_number`
+Transform the rsyslog severity name into the integer ID of that severity level.
+
+Takes one argument, can be either the severity integer ID, or the name, returns the severity integer ID, or nil.
+
+Example:
+``` puppet
+$output1 = get_log_level_number('foo') # == nil
+$output2 = get_log_level_number('warning') # == 4
+$output3 = get_log_level_number(2) # == get_log_level_number('crit') == 2
+```
+
+#### `is_facility`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog facility or `false` otherwise.
+
+The input can be either and integer for the facility ID, or the name of the severity e.g. 'kern', ...
+
+Example:
+``` puppet
+$output1 = is_facility('foo') # == false
+$output2 = is_facility(10) # == is_facility('security') == true
+```
+
+#### `is_read_mode`
+Input checking function, takes one argument and outputs `true` if it corresponds to a rsyslog file read mode or `false` otherwise.
+
+The input can be either an integer for the read mode ID, or the name of the mode e.g. 'line', ...
+
+Example:
+``` puppet
+$output1 = is_read_mode('foo') # == false
+$output2 = is_read_mode(1) # == is_read_mode('paragraph') == true
+```
+
+#### `get_read_mode_number`
+Transform the rsyslog read mode name into the integer ID of that read mode.
+
+Takes one argument, can be either the read mode integer ID, or the name, returns the read mode integer ID, or nil.
+
+Example:
+``` puppet
+$output1 = get_read_mode_number('foo') # == nil
+$output2 = get_read_mode_number(0) # == get_read_mode_number('line') == 0
+```
 
 ### Public Classes
 
@@ -282,11 +360,11 @@ Defaults to:
 {
   'imuxsock'    => {
     'comment'   => 'provides support for local system logging',
-    'arguments' => [
-      { 'name'  => 'SysSock.Use',                'value' => 'off' },
-      { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
-      { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
-    ],
+    'arguments' => {
+      'SysSock.Use'                => 'off',
+      'SysSock.RateLimit.Interval' => 1,
+      'SysSock.RateLimit.Burst'    => 100,
+    },
   },
   'imjournal' => { 'comment' => 'provides access to the systemd journal' },
 }
@@ -297,10 +375,10 @@ Defaults to:
 {
   'imuxsock'    => {
     'comment'   => 'provides support for local system logging',
-    'arguments' => [
-      { 'name'  => 'SysSock.RateLimit.Interval', 'value' => '1'   },
-      { 'name'  => 'SysSock.RateLimit.Burst',    'value' => '100' },
-    ],
+    'arguments' => {
+      'SysSock.RateLimit.Interval' => 1,
+      'SysSock.RateLimit.Burst'    => 100,
+    },
   },
   'imklog'   => { 'comment' => 'provides kernel logging support (previously done by rklogd)' },
 }
@@ -423,6 +501,74 @@ Manage the configuration folder and main config file of rsyslog 8.x.
 Manage the service of rsyslog 8.x.
 
 ### Public defined types
+
+#### Defined type rsyslogv8::config::ruleset
+Define to create a rsyslog ruleset.
+
+**Parameters within `rsyslogv8::config::ruleset`:**
+
+##### `actions`
+The list containing actions that will be performed on the events. Each action is a hash and also contains its own queue parameters.
+
+To have consistency every parameter concerning SSL are uniformized:
+ `ssl`              => Boolean to enable or disable SSL/TLS support in actions that support it (if not set the global ::rsyslogv8::ssl value is taken
+ `ssl_cert`         => String full file path to the certificate file
+ `ssl_ca`           => String full file path to the certificate authority
+ `ssl_key`          => String full file path to the private key
+ `auth`             => String authentication mode for the action can be any of: 'anon', 'x509/name'
+ `authorised_peers` => String the name of authorized host for the action when `auth` is 'x509/name'
+
+Other parameters have the same name as in the rsyslog documentation.
+
+Example of usage:
+
+``` puppet
+::rsyslogv8::config::ruleset { 'my_ruleset':
+  actions => [
+    {
+      'type'             => 'omfwd',
+      'protocol'         => 'tcp',
+      'target'           => 'localhost',
+      'name'             => 'send4',
+      'ssl'              => true,
+      'auth'             => 'x509/name',
+      'selector'         => 'local0.*',
+      'authorised_peers' => 'localhost',
+      'queue'            => {
+        'type'             => 'LinkedList',
+        'filename'         => 'queue-filename',
+        'max_disk_space'   => '4g',
+        'save_on_shutdown' => true,
+      },
+    },
+    {
+      'type'             => 'omrelp',
+      'target'           => 'localhost',
+      'name'             => 'send12',
+      'ssl'              => true,
+      'auth'             => 'x509/name',
+      'selector'         => 'local0.*',
+      'authorised_peers' => 'localhost',
+    },
+    {
+      'name'     => 'local1',
+      'type'     => 'omfile',
+      'file'     => 'localhost',
+      'template' => 'RSYSLOG_TraditionalFileFormat',
+    },
+    {
+      'type'     => 'stop',
+      'name'     => 'stop',
+      'selector' => '*.*',
+    },
+  ],
+}
+```
+
+##### `ruleset_name`
+The name of the ruleset, this will be the name that rsyslog uses to reference the ruleset in inputs' ruleset parameter.
+
+Defaults to the name of the resource.
 
 #### Defined type rsyslogv8::config::ship
 Define to send locally generated logs to a remote server.

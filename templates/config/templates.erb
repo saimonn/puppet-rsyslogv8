@@ -1,0 +1,13 @@
+<% if @templates_comment %># <%= @templates_comment %><% end %>
+<% @templates.each_index do | i | -%>
+<%
+     raise Puppet::ParseError, "templates[#{i}] is not a hash" unless @templates[i].is_a? Hash
+     raise Puppet::ParseError, "templates[#{i}] must contain type" unless @templates[i].fetch('type', nil) and @templates[i]['type'] != :undef
+-%>
+template(
+<%   raise Puppet::ParseError, "templates[#{i}] has no name" unless @templates[i].fetch('name', nil) and @templates[i]['name'] != :undef -%>
+  name="<%= @templates[i]['name'] %>"
+  type="<%= @templates[i]['type'] %>"
+<%=  scope.function_sub_template_call(["rsyslogv8/config/templates/_#{@templates[i]['type']}.erb", {'template' => @templates[i] }]) -%>
+)
+<% end -%>

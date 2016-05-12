@@ -1,0 +1,10 @@
+input(
+<%raise Puppet::ParseError, 'input name was not provided' unless @input.fetch('name', nil) -%>
+<%raise Puppet::ParseError, 'input type was not provided' unless @input.fetch('type', nil) -%>
+  type="<%= @input['type'] %>"
+<%=
+  # for some reason some modules seem not to support ruleset so cannot be DRY here...
+  # call a dynamically computed sub-template according to the type of the input
+  scope.function_sub_template_call(["rsyslogv8/config/input/_#{@input['type']}.erb", {'input' => @input} ])
+-%>
+)

@@ -1,11 +1,18 @@
-<% @files.each_index do |i| %>
-input(
- type="imfile"
- file="<%= @files[i] %>"
- tag="<%= @rsyslog_tag %>"
- facility="<%= @facility %>"
- severity="<%= @severity %>"
- readmode="<%= @_real_readmode %>"
- ruleset="<%= @ruleset_name %>"
-)
-<% end %>
+<%@files.each_index do |i| -%>
+<%= 
+    scope.function_sub_template_call([
+      'rsyslogv8/config/input.erb',
+      {
+        'input' => {
+          'name'     => @files[i],
+          'type'     => 'imfile',
+          'Tag'      => @rsyslog_tag,
+          'Facility' => @facility,
+          'Severity' => @severity,
+          'readmode' => @readmode,
+          'ruleset'  => @ruleset_name,
+        }
+      }
+    ])
+%>
+<%end -%>

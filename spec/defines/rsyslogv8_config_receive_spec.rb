@@ -138,7 +138,7 @@ describe 'rsyslogv8::config::receive' do
               } }
               it 'should fail' do
                 expect { should contain_rsyslogv8__config__receive('localhost')
-                }.to raise_error(Puppet::Error, /must define remote_authorised_peers when authenticating hosts/)
+                }.to raise_error(Puppet::Error, /cannot override TCP auth settings per listen point/)
               end
             end
           end
@@ -165,9 +165,11 @@ describe 'rsyslogv8::config::receive' do
                 :protocol    => 'relp',
                 :remote_auth => 'x509/name',
               } }
-              it 'should fail' do
-                expect { should contain_rsyslogv8__config__receive('localhost')
-                }.to raise_error(Puppet::Error, /must define remote_authorised_peers when authenticating hosts/)
+              if ! ( facts[:osfamily] == 'RedHat' and ( facts[:operatingsystemmajrelease] == '5' or facts[:operatingsystemmajrelease] == '6' ) )
+                it 'should fail' do
+                  expect { should contain_rsyslogv8__config__receive('localhost')
+                  }.to raise_error(Puppet::Error, /must define remote_authorised_peers when authenticating hosts/)
+                end
               end
             end
           end

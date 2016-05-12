@@ -1,0 +1,3 @@
+<%raise Puppet::ParseError, "must define the string in a string template #{@template['name']}" unless @template.fetch('string', nil) and @template['string'] != :undef -%>
+<%raise Puppet::ParseError, "template string must be a String in template #{@template['name']}" unless @template['string'].is_a? String -%>
+  string="<%= @template['string'] %>"

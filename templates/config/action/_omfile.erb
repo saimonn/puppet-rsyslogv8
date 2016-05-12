@@ -1,0 +1,11 @@
+<%raise Puppet::ParseError, 'must define at least "file" or "dynafile" for file output' unless ( ( @action.fetch('file', nil) != nil and @action['file'] != :undef ) or ( @action.fetch('dynafile') != nil and @action['dynafile'] != :undef ) ) -%>
+<%raise Puppet::ParseError, 'cannot define both "file" and "dynafile" for file output' if ( ( @action.fetch('file', nil) != nil and @action.fetch('file', nil) != :undef ) and ( @action.fetch('dynafile', nil) != nil and @action.fetch('dynafile', nil) != :undef ) ) -%>
+<%if @action.fetch('file', nil) != nil and @action['file'] != :undef -%>
+  file="<%= @action['file'] %>"
+<%end -%>
+<%if @action.fetch('dynafile', nil) != nil and @action['dynafile'] != :undef -%>
+  dynaFile="<%= @action['dynafile'] %>"
+<%end -%>
+<%if @action.fetch('template', nil) != nil and @action['template'] != :undef -%>
+  template="<%= @action['template'] %>"
+<%end -%>

@@ -1,0 +1,39 @@
+<%if @module_args.fetch('KLogInternalMsgFacility', nil) and @module_args['KLogInternalMsgFacility'] != :undef -%>
+<%  raise Puppet::ParseError, "KLogInternalMsgFacility must be a String or an Integer given #{modules_args['KLogInternalMsgFacility'].class.name}" unless ( modules_args['KLogInternalMsgFacility'].is_a? String or modules_args['KLogInternalMsgFacility'].is_a? Integer ) -%>
+<%  raise Puppet::ParseError, "KLogInternalMsgFacility must be a facility name or number given #{@module_args['KLogInternalMsgFacility']}" unless scope.function_is_facility([ modules_args['KLogInternalMsgFacility'] ]) -%>
+ KLogInternalMsgFacility="<%= modules_args['KLogInternalMsgFacility'] %>"
+<%end -%>
+<%if @module_args.fetch('KLogPermitNonKernelFacility', nil) != nil and @module_args['KLogPermitNonKernelFacility'] != :undef -%>
+<% raise Puppet::ParseError, "KLogPermitNonKernelFacility must be a Boolean given #{modules_args['KLogPermitNonKernelFacility'].class.name}" unless scope.function_is_bool([ @module_args['KLogPermitNonKernelFacility'] ]) -%>
+ KLogPermitNonKernelFacility="<%= @module_args['KLogPermitNonKernelFacility'] or @module_args['KLogPermitNonKernelFacility'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('DebugPrintKernelSymbols', nil) != nil and @module_args['DebugPrintKernelSymbols'] != :undef -%>
+<%  raise Puppet::ParseError, "DebugPrintKernelSymbols must be a Boolean given #{modules_args['DebugPrintKernelSymbols'].class.name}" unless scope.function_is_bool([ @module_args['DebugPrintKernelSymbols'] ]) -%>
+ DebugPrintKernelSymbols="<%= @module_args['DebugPrintKernelSymbols'] or @module_args['DebugPrintKernelSymbols'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('klogLocalIPIF', nil) != nil and @module_args['klogLocalIPIF'] != :undef -%>
+<%  raise Puppet::ParseError, "klogLocalIPIF must be a String given #{modules_args['klogLocalIPIF'].class.name}" unless @module_args['klogLocalIPIF'].is_a? String -%>
+<%# TODO check on interface list -%>
+ klogLocalIPIF="<%= @module_args['klogLocalIPIF'] %>"
+<%end -%>
+<%if @module_args.fetch('klogConsoleLogLevel', nil) != nil and @module_args['klogConsoleLogLevel'] != :undef -%>
+<%  raise Puppet::ParseError, "klogConsoleLogLevel must be a String given #{modules_args['klogConsoleLogLevel'].class.name}" unless scope.function_is_integer([ @module_args['klogConsoleLogLevel'] ]) -%>
+<%  raise Puppet::ParseError, "klogConsoleLogLevel must be a log level name, log level number or -1 (for all) given #{modules_args['klogConsoleLogLevel']}" unless ( scope.function_is_log_level([ modules_args['klogConsoleLogLevel'] ]) or modules_args['klogConsoleLogLevel'] == -1 ) -%>
+ klogConsoleLogLevel="<%= scope.function_get_log_level_number([ modules_args['klogConsoleLogLevel'] ]) or -1 %>"
+<%end -%>
+<%if @module_args.fetch('klogUseSyscallInterface', nil) != nil and @module_args['klogUseSyscallInterface'] != :undef -%>
+<%  raise Puppet::ParseError, "klogUseSyscallInterface must be a Boolean given #{modules_args['klogUseSyscallInterface'].class.name}" unless scope.function_is_bool([ @module_args['klogUseSyscallInterface'] ]) -%>
+ klogUseSyscallInterface="<%= @module_args['klogUseSyscallInterface'] or @module_args['klogUseSyscallInterface'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('klogSymbolsTwice', nil) != nil and @module_args['klogSymbolsTwice'] != :undef -%>
+<%  raise Puppet::ParseError, "klogSymbolsTwice must be a Boolean given #{modules_args['klogSymbolsTwice'].class.name}" unless scope.function_is_bool([ @module_args['klogSymbolsTwice'] ]) -%>
+ klogSymbolsTwice="<%= @module_args['klogSymbolsTwice'] or @module_args['klogSymbolsTwice'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('klogParseKernelTimestamp', nil) != nil and @module_args['klogParseKernelTimestamp'] != :undef -%>
+<%  raise Puppet::ParseError, "klogParseKernelTimestamp must be a Boolean given #{modules_args['klogParseKernelTimestamp'].class.name}" unless scope.function_is_bool([ @module_args['klogParseKernelTimestamp'] ]) -%>
+ klogParseKernelTimestamp="<%= @module_args['klogParseKernelTimestamp'] or @module_args['klogParseKernelTimestamp'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @module_args.fetch('klogKeepKernelTimestamp', nil) != nil and @module_args['klogKeepKernelTimestamp'] != :undef -%>
+<%  raise Puppet::ParseError, "klogKeepKernelTimestamp must be a Boolean given #{modules_args['klogKeepKernelTimestamp'].class.name}" unless scope.function_is_bool([ @module_args['klogKeepKernelTimestamp'] ]) -%>
+ klogKeepKernelTimestamp="<%= @module_args['klogKeepKernelTimestamp'] or @module_args['klogKeepKernelTimestamp'] == 'true' ? 'on' : 'off' %>"
+<%end -%>

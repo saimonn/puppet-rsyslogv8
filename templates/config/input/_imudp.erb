@@ -1,0 +1,25 @@
+  name="<%= @input['name'] %>"
+<%if @input.fetch('ruleset', nil) != nil and @input['ruleset'] != :undef -%>
+<%  raise Puppet::ParseError, "ruleset must be a String in input #{@input['name']}" unless @input['ruleset'].is_a? String -%>
+   Ruleset="<%= @input['ruleset'] %>"
+<%end -%>
+<%if @input.fetch('name.appendPort', nil) != nil and @input['name.appendPort'] != :undef -%>
+<%  raise Puppet::ParseError, "name.appendPort must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['name.appendPort'] ]) -%>
+   name.appendPort="<%= @input['name.appendPort'] or @input['name.appendPort'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('RateLimit.Interval', nil) != nil and @input['RateLimit.Interval'] != :undef -%>
+<%  raise Puppet::ParseError, "RateLimit.Interval must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['RateLimit.Interval'] ]) -%>
+  RateLimit.Interval="<%= @input['RateLimit.Interval'] %>"
+<%end -%>
+<%if @input.fetch('RateLimit.Burst', nil) != nil and @input['RateLimit.Burst'] != :undef -%>
+<%  raise Puppet::ParseError, "RateLimit.Burst must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['RateLimit.Burst'] ]) -%>
+  RateLimit.Burst="<%= @input['RateLimit.Burst'] %>"
+<%end -%>
+<%if @input.fetch('port', nil) != nil and @input['port'] != :undef -%>
+<%  raise Puppet::ParseError, "port must be a Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['port'] ]) -%>
+  Port="<%= @input['port'] %>"
+<%end -%>
+<%if @input.fetch('address', nil) != nil and @input['address'] != :undef -%>
+<%  raise Puppet::ParseError, "address must be a String in input #{@input['name']}" unless @input['address'].is_a? String -%>
+  Address="<%= @input['address'] %>"
+<%end -%>

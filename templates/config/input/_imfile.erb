@@ -1,0 +1,63 @@
+<%if @input.fetch('ruleset', nil) != nil and @input['ruleset'] != :undef -%>
+<%  raise Puppet::ParseError, "ruleset must be a String in input #{@input['name']}" unless @input['ruleset'].is_a? String -%>
+  ruleset="<%= @input['ruleset'] %>"
+<%end -%>
+  File="<%= @input['name'] %>"
+<%raise Puppet::ParseError, "Tag parameter is mandatory in input #{@input['name']}" unless ( @input.fetch('Tag', nil) != nil and @input['Tag'] != :undef ) -%>
+<%raise Puppet::ParseError, "Tag parameter must be a string in input #{@input['name']}" unless @input['Tag'].is_a? String -%>
+  Tag="<%= @input['Tag'] %>"
+<%if @input.fetch('Facility', nil) != nil and @input['Facility'] != :undef -%>
+<%  raise Puppet::ParseError, "Facility parameter must be a String or an Integer in input #{@input['name']}" unless ( @input['Facility'].is_a? String or @input['Facility'].is_a? Integer ) -%>
+<%  raise Puppet::ParseError, "unknown Facility '#{@input['Facility']}' in input #{@input['name']}" unless scope.function_is_facility([ @input['Facility'] ]) -%>
+  Facility="<%= @input['Facility'] %>"
+<%end -%>
+<%if @input.fetch('Severity', nil) != nil and @input['Severity'] != :undef -%>
+<%  raise Puppet::ParseError, "Severity parameter must be a String or an Integer in input #{@input['name']}" unless ( @input['Severity'].is_a? String or @input['Severity'].is_a? Integer ) -%>
+<%  raise Puppet::ParseError, "unknown Severity '#{@input['Severity']}' in input #{@input['name']}" unless scope.function_is_log_level([ @input['Severity'] ]) -%>
+  Severity="<%= @input['Severity'] %>"
+<%end -%>
+<%if @input.fetch('PersistStateInterval', nil) != nil and @input['PersistStateInterval'] != :undef -%>
+<%  raise Puppet::ParseError, "PersistStateInterval must be an Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['PersistStateInterval'] ]) -%>
+  PersistStateInterval="<%= @input['PersistStateInterval'] %>"
+<%end -%>
+<%if @input.fetch('startmsg.regex', nil) != nil and @input['startmsg.regex'] != :undef -%>
+<%  raise Puppet::ParseError, "startmsg.regex must be a String in input #{@input['name']}" unless @input['startmsg.regex'].is_a? String -%>
+  startmsg.regex="<%= @input['startmsg.regex'] %>"
+<%end -%>
+<%if @input.fetch('readMode', nil) != nil and @input['readMode'] != :undef -%>
+<% raise Puppet::ParseError, "readMode must be an Integer or a String in input #{@input['name']}" unless ( @input['readMode'].is_a? Integer or @input['readMode'].is_a? String ) -%>
+<% raise Puppet::ParseError, "unknown readMode given #{@input['readMode']} in input  #{@input['name']}" unless scope.function_is_read_mode([ @input['readMode'] ]) -%>
+  readMode="<%= scope.function_get_read_mode_number([ @input['readMode'] ]) %>"
+<%end -%>
+<%if @input.fetch('escapeLF', nil) != nil and @input['escapeLF'] != :undef-%>
+<%  raise Puppet::ParseError, "escapeLF must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['escapeLF'] ]) -%>
+  escapeLF="<%= @input['escapeLF'] or @input['escapeLF'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('MaxLinesAtOnce', nil) != nil and @input['MaxLinesAtOnce'] != :undef -%>
+<% raise Puppet::ParseError, "MaxLinesAtOnce must be an Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['MaxLinesAtOnce'] ]) -%>
+  MaxLinesAtOnce="<%= @input['MaxLinesAtOnce'] %>"
+<%end -%>
+<%if @input.fetch('MaxSubmitAtOnce', nil) != nil and @input['MaxSubmitAtOnce'] != :undef -%>
+<% raise Puppet::ParseError, "MaxSubmitAtOnce must be an Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['MaxSubmitAtOnce'] ]) -%>
+  MaxSubmitAtOnce="<%= @input['MaxSubmitAtOnce'] %>"
+<%end -%>
+<%if @input.fetch('deleteStateOnFileDelete', nil) != nil and @input['deleteStateOnFileDelete'] != :undef -%>
+<%  raise Puppet::ParseError, "deleteStateOnFileDelete must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['deleteStateOnFileDelete'] ]) -%>
+  deleteStateOnFileDelete="<%= @input['deleteStateOnFileDelete'] or @input['deleteStateOnFileDelete'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('addMetadata', nil) != nil and @input['addMetadata'] != :undef -%>
+<%  raise Puppet::ParseError, "addMetadata must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['addMetadata'] ]) -%>
+  addMetadata="<%= @input['addMetadata'] or @input['addMetadata'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('reopenOnTruncate', nil) != nil and @input['reopenOnTruncate'] != :undef -%>
+<%  raise Puppet::ParseError, "reopenOnTruncate must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['reopenOnTruncate'] ]) -%>
+  reopenOnTruncate="<%= @input['reopenOnTruncate'] or @input['reopenOnTruncate'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
+<%if @input.fetch('trimLineOverBytes', nil) != nil and @input['trimLineOverBytes'] != :undef -%>
+<% raise Puppet::ParseError, "trimLineOverBytes must be an Integer in input #{@input['name']}" unless scope.function_is_integer([ @input['trimLineOverBytes'] ]) -%>
+  trimLineOverBytes="<%= @input['trimLineOverBytes'] %>"
+<%end -%>
+<%if @input.fetch('freshStartTail', nil) != nil and @input['freshStartTail'] != :undef -%>
+<%  raise Puppet::ParseError, "freshStartTail must be a Boolean in input #{@input['name']}" unless scope.function_is_bool([ @input['freshStartTail'] ])  -%>
+  freshStartTail="<%= @input['freshStartTail'] or @input['freshStartTail'] == 'true' ? 'on' : 'off' %>"
+<%end -%>

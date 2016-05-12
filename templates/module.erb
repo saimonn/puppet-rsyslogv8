@@ -1,0 +1,8 @@
+<%if @rsysmodule.fetch('comment', nil) -%>
+# <%= @rsysmodule['comment'] %>
+<%end -%>
+module(
+<%raise Puppet::ParseError, "module name must be provided" unless @name -%>
+ load="<%= @name %>"
+<%= scope.function_sub_template_call([ "rsyslogv8/module/_#{@name.gsub(':', '_')}.erb", { 'module_args' => @rsysmodule.fetch('arguments', {}) } ]) -%>
+)

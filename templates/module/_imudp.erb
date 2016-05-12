@@ -1,0 +1,27 @@
+<%if @module_args.fetch('TimeRequery', nil) != nil and @module_args['TimeRequery'] != :undef -%>
+<% raise Puppet::ParseError, "TimeRequery must be an Integer" unless scope.function_is_integer([ @module_args['TimeRequery'] ]) -%>
+ TimeRequery="<%= @module_args['TimeRequery'] %>"
+<%end -%>
+<%if @module_args.fetch('SchedulingPolicy', nil) != nil and @module_args['SchedulingPolicy'] != :undef -%>
+<% raise Puppet::ParseError, "SchedulingPolicy must be a String" unless @module_args['SchedulingPolicy'].is_a? String -%>
+<%
+   case @module_args['SchedulingPolicy']
+     when 'rr', 'fifo', 'other'
+     else
+       raise Puppet::ParseError, "SchedulingPolicy can only be 'rr', 'fifo' or 'other'"
+   end
+-%>
+ SchedulingPolicy="<%= @module_args['SchedulingPolicy'] %>"
+<%end -%>
+<%if @module_args.fetch('SchedulingPriority', nil) != nil and @module_args['SchedulingPriority'] != :undef -%>
+<% raise Puppet::ParseError, "SchedulingPriority must be an Integer" unless scope.function_is_integer([ @module_args['SchedulingPriority'] ]) -%>
+ SchedulingPriority="<%= @module_args['SchedulingPriority'] %>"
+<%end -%>
+<%if @module_args.fetch('batchSize', nil) != nil and @module_args['batchSize'] != :undef -%>
+<% raise Puppet::ParseError, "batchSize must be an Integer" unless scope.function_is_integer([ @module_args['batchSize'] ]) -%>
+ batchSize="<%= @module_args['batchSize'] %>"
+<%end -%>
+<%if @module_args.fetch('threads', nil) != nil and @module_args['threads'] != :undef -%>
+<% raise Puppet::ParseError, "threads must be an Integer" unless scope.function_is_integer([ @module_args['threads'] ]) -%>
+ threads="<%= @module_args['threads'] %>"
+<%end -%>

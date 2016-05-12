@@ -1,0 +1,20 @@
+<%if @action.fetch('comment', nil) != nil and @action['comment'] != :undef %># <%= @action['comment'] %><% end %>
+ <%= @action.fetch('selector', '*.*') %><%-
+  raise Puppet::ParseError, 'action type was not provided' unless @action.fetch('type', nil) or @action['type'] != :undef
+  if @action['type'] == 'stop' %> stop
+<%else %> action(
+<%  raise Puppet::ParseError, 'action name was not provided' unless @action.fetch('name', nil) or @action['name'] != :undef -%>
+  name="<%= @action['name'] %>"
+  type="<%= @action['type'] %>"
+<%=
+    # call a dynamically computed sub-template according to the type of the action
+    scope.function_sub_template_call(["rsyslogv8/config/action/_#{@action['type']}.erb", {'action' => @action} ])
+-%>
+<%  if @action.fetch('queue', nil) != nil and @action['queue'] != :undef -%>
+<%=
+      # call a subtemplate
+      scope.function_sub_template_call(['rsyslogv8/config/action/queue.erb', {'queue' => @action['queue']} ])
+-%>
+<%  end -%>
+ )
+<% end -%>

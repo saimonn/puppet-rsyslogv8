@@ -1,0 +1,8 @@
+<% if @ruleset_comment %># <%= @ruleset_comment %><% end %>
+ruleset(
+ name="<%= @ruleset_name %>"
+) {
+<% @actions.each do | action | -%>
+<%=  scope.function_sub_template_call(['rsyslogv8/config/action.erb', {'action' => action }]) -%>
+<% end -%>
+}
