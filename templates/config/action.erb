@@ -6,6 +6,12 @@
 <%  raise Puppet::ParseError, 'action name was not provided' unless @action.fetch('name', nil) or @action['name'] != :undef -%>
   name="<%= @action['name'] %>"
   type="<%= @action['type'] %>"
+<%
+    if @action.fetch('resumeRetryCount', nil) != nil and @action['resumeRetryCount'] != :undef
+      raise Puppet::ParseError, 'action resumeRetryCount must be an integer' unless scope.function_is_integer([ @action['resumeRetryCount'] ])
+-%>
+  action.resumeRetryCount="<%= @action['resumeRetryCount'] %>"
+<%  end -%>
 <%=
     # call a dynamically computed sub-template according to the type of the action
     scope.function_sub_template_call(["rsyslogv8/config/action/_#{@action['type']}.erb", {'action' => @action} ])

@@ -17,6 +17,7 @@
 #  override_ssl_ca: [String] override absolute path to the CA file, NOT avaiable for tcp
 #  override_ssl_cert: [String] override absolute path to the cert file, NOT avaiable for tcp
 #  override_ssl_key: [String] override absolute path to the key file, NOT avaiable for tcp
+#  action_resume_retry_cnt: [Integer] number of retries when action fails, default 0, -1 means infinite
 define rsyslogv8::config::ship (
   $remote_host             = $title,
   $remote_port             = undef,
@@ -35,6 +36,7 @@ define rsyslogv8::config::ship (
   $override_ssl_ca         = false,
   $override_ssl_cert       = false,
   $override_ssl_key        = false,
+  $action_resume_retry_cnt = undef,
 ) {
   # Input checking
   if ! is_string($remote_host) and ! ( is_domain_name($remote_host) or is_ip_address($remote_host) ){

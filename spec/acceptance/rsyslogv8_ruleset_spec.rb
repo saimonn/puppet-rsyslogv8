@@ -17,6 +17,18 @@ describe 'rsyslogv8' do
             'queue' => {
               'type' => 'LinkedList',
             },
+            'resumeRetryCount' => '0',
+          },
+          {
+            'type' => 'omfwd',
+            'name' => 'send',
+            'target' => 'localhost',
+            'protocol' => 'tcp',
+            'comment' => 'This is a one-line comment',
+            'queue' => {
+              'type' => 'LinkedList',
+            },
+            'resumeRetryCount' => '-1',
           },
           { 'type' => 'omfwd',
             'target' => 'localhost',
