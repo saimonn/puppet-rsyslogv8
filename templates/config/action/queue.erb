@@ -14,3 +14,11 @@
   queue.saveonshutdown="on"
 <%  end -%>
 <%end -%>
+<%if @queue.fetch('discard_mark', nil) != nil and @queue['discard_mark'] != :undef -%>
+<%  raise Puppet::ParseError, "discard_mark must be an Integer" unless scope.function_is_integer([ @queue['discard_mark'] ]) -%>
+  queue.discardmark="<%= @queue['discard_mark'] %>"
+<%  if @queue.fetch('discard_severity', nil) != nil and @queue['discard_severity'] != :undef -%>
+<%    raise Puppet::ParseError, "discard_severity must be an rsyslog log level" unless ( scope.function_is_log_level([ @queue['discard_severity'] ]) or @queue['discard_severity'] == 8 ) -%>
+  queue.discardseverity="<%= scope.function_get_log_level_number([ @queue['discard_severity'] ]) or 8 %>"
+<%  end -%>
+<%end -%>

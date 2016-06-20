@@ -16,8 +16,10 @@ describe 'rsyslogv8' do
             'comment' => 'This is a one-line comment',
             'queue' => {
               'type' => 'LinkedList',
+              'discard_mark' => '100',
+              'discard_severity' => 8,
             },
-            'resumeRetryCount' => '0',
+            'resumeRetryCount' => 0,
           },
           {
             'type' => 'omfwd',
@@ -27,8 +29,10 @@ describe 'rsyslogv8' do
             'comment' => 'This is a one-line comment',
             'queue' => {
               'type' => 'LinkedList',
+              'discard_mark' => '100',
+              'discard_severity' => 0,
             },
-            'resumeRetryCount' => '-1',
+            'resumeRetryCount' => -1,
           },
           { 'type' => 'omfwd',
             'target' => 'localhost',
@@ -37,6 +41,8 @@ describe 'rsyslogv8' do
             'queue'    => {
               'type'     => 'Disk',
               'filename' => 'queue-filename2',
+              'discard_mark' => '100',
+              'discard_severity' => 'debug',
             },
           },
           {
@@ -47,6 +53,7 @@ describe 'rsyslogv8' do
             'ssl'      => true,
             'queue'    => {
               'type' => 'FixedArray',
+              'discard_mark' => '-1',
             },
           },
           {
