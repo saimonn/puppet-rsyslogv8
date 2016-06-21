@@ -1,0 +1,36 @@
+<%if @module_args.fetch('interval', nil) and @module_args['interval'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument interval must be an Integer' unless scope.function_is_integer([ @module_args['interval'] ]) -%>
+  interval="<%= @module_args['interval'] %>"
+<%end -%>
+<%if @module_args.fetch('facility', nil) and @module_args['facility'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument facility must be a rsyslog facility name or number' unless scope.function_is_facility([ @module_args['facility'] ]) -%>
+  facility="<%= scope.function_get_facility_number([ @module_args['facility'] ]) %>"
+<%end -%>
+<%if @module_args.fetch('severity', nil) and @module_args['severity'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument severity must be a rsyslog severity name or number' unless scope.function_is_severity([ @module_args['severity'] ]) -%>
+  severity="<%= @module_args['severity'] %>"
+<%end -%>
+<%if @module_args.fetch('resetCounters', nil) and @module_args['resetCounters'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument resetCounters must be a Boolean' unless scope.function_is_bool([ @module_args['resetCounters'] ]) -%>
+  resetCounters="<%= @module_args['resetCounters'] %>"
+<%end -%>
+<%if @module_args.fetch('format', nil) and @module_args['format'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument format must be a one of the following: "json", "json-elasticsearch", "cee", "legacy"' unless [ "json", "json-elasticsearch", "cee", "legacy" ].include?( @module_args['format'] ) -%>
+  format="<%= @module_args['format'] %>"
+<%end -%>
+<%if @module_args.fetch('log.syslog', nil) and @module_args['log.syslog'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument log.syslog must be a Boolean' unless scope.function_is_bool([ @module_args['log.syslog'] ]) -%>
+  log.syslog="<%= @module_args['log.syslog'] %>"
+<%end -%>
+<%if @module_args.fetch('log.file', nil) and @module_args['log.file'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument log.file must be a String' unless @module_args['log.file'].is_a? String -%>
+  log.file="<%= @module_args['log.file'] %>"
+<%end -%>
+<%if @module_args.fetch('Ruleset', nil) and @module_args['Ruleset'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument log.file must be a String' unless @module_args['Ruleset'].is_a? String -%>
+  Ruleset="<%= @module_args['Ruleset'] %>"
+<%end -%>
+<%if @module_args.fetch('bracketing', nil) and @module_args['bracketing'] != :undef -%>
+<%  raise Puppet::ParseError, 'module impstats argument bracketing must be a Boolean' unless scope.function_is_bool([ @module_args['bracketing'] ]) -%>
+  bracketing="<%= @module_args['bracketing'] %>"
+<%end -%>
