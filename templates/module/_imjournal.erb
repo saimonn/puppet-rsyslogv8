@@ -4,7 +4,7 @@ PersistStateInterval="<%= @module_args['PersistStateInterval'] %>"
 <%end -%>
 <%if @module_args.fetch('StateFile', nil) != nil and @module_args['StateFile'] != :undef -%>
 <%  raise Puppet::ParseError, "StateFile must be a String" unless @module_args['StateFile'].is_a? String -%>
-StateFile<%= @module_args['StateFile'] %>"
+StateFile="<%= @module_args['StateFile'] %>"
 <%end -%>
 <%if @module_args.fetch('ratelimit.interval', nil) != nil and @module_args['ratelimit.interval'] != :undef -%>
 <%  raise Puppet::ParseError, "ratelimit.interval must be an Integer" unless scope.function_is_integer([ @module_args['ratelimit.interval'] ]) -%>
