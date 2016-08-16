@@ -3,4 +3,5 @@
   acceptance:
     - '*'
 Rakefile:
-  metadata-json-lint_options: [ 'no-strict-license' ]
+  metadata-json-lint_options:
+    strict_license: false
