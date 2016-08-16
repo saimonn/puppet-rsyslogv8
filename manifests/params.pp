@@ -253,7 +253,7 @@ class rsyslogv8::params {
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
               $_version_os_family_modules              = {
-                                        'imuxsock' => {
+                                        'imuxsock'  => {
                                           'comment'   => 'provides support for local system logging',
                                           'arguments' => {
                                             'SysSock.Use'                => 'off',
@@ -261,7 +261,13 @@ class rsyslogv8::params {
                                             'SysSock.RateLimit.Burst'    => 100,
                                           },
                                         },
-                                        'imjournal' => { 'comment' => 'provides access to the systemd journal' },
+                                        'imjournal' => {
+                                          'comment'   => 'provides access to the systemd journal',
+                                          'arguments' => {
+                                            'StateFile'            => '/var/lib/rsyslog/imjournal.state',
+                                            'PersistStateInterval' => '100',
+                                          },
+                                        },
               }
               $_version_os_family_perm_file            = undef
               $_version_os_family_perm_dir             = undef
