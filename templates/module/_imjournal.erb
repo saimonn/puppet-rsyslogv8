@@ -1,30 +1,30 @@
 <%if @module_args.fetch('PersistStateInterval', nil) != nil and @module_args['PersistStateInterval'] != :undef -%>
 <%  raise Puppet::ParseError, "PersistStateInterval must be an Integer" unless scope.function_is_integer([ @module_args['PersistStateInterval'] ]) -%>
-PersistStateInterval="<%= @module_args['PersistStateInterval'] %>"
+ PersistStateInterval="<%= @module_args['PersistStateInterval'] %>"
 <%end -%>
 <%if @module_args.fetch('StateFile', nil) != nil and @module_args['StateFile'] != :undef -%>
 <%  raise Puppet::ParseError, "StateFile must be a String" unless @module_args['StateFile'].is_a? String -%>
-StateFile="<%= @module_args['StateFile'] %>"
+ StateFile="<%= @module_args['StateFile'] %>"
 <%end -%>
 <%if @module_args.fetch('ratelimit.interval', nil) != nil and @module_args['ratelimit.interval'] != :undef -%>
 <%  raise Puppet::ParseError, "ratelimit.interval must be an Integer" unless scope.function_is_integer([ @module_args['ratelimit.interval'] ]) -%>
-ratelimit.interval="<%= @module_args['ratelimit.interval'] %>"
+ ratelimit.interval="<%= @module_args['ratelimit.interval'] %>"
 <%end -%>
 <%if @module_args.fetch('ratelimit.burst', nil) != nil and @module_args['ratelimit.burst'] != :undef -%>
 <%  raise Puppet::ParseError, "ratelimit.burst must be an Integer" unless scope.function_is_integer([ @module_args['ratelimit.burst'] ]) -%>
-ratelimit.burst="<%= @module_args['ratelimit.burst'] %>"
+ ratelimit.burst="<%= @module_args['ratelimit.burst'] %>"
 <%end -%>
 <%if @module_args.fetch('IgnorePreviousMessages', nil) != nil and @module_args['IgnorePreviousMessages'] != :undef -%>
 <%  raise Puppet::ParseError, "IgnorePreviousMessages must be an Boolean" unless scope.function_is_bool([ @module_args['IgnorePreviousMessages'] ]) -%>
-IgnorePreviousMessages="<%= @module_args['IgnorePreviousMessages'] %>"
+ IgnorePreviousMessages="<%= @module_args['IgnorePreviousMessages'] %>"
 <%end -%>
 <%if @module_args.fetch('DefaultSeverity', nil) != nil and @module_args['DefaultSeverity'] != :undef -%>
 <%  raise Puppet::ParseError, "DefaultSeverity must be an Integer or a String" unless ( @module_args['DefaultSeverity'].is_a? Integer or @module_args['DefaultSeverity'].is_a? String ) -%>
 <%  raise Puppet::ParseError, "DefaultSeverity must be a severity name or number" unless scope.function_is_log_level([ @module_args['DefaultSeverity'] ]) -%>
-DefaultSeverity="<%= @module_args['DefaultSeverity'] %>"
+ DefaultSeverity="<%= @module_args['DefaultSeverity'] %>"
 <%end -%>
 <%if @module_args.fetch('DefaultFacility', nil) != nil and @module_args['DefaultFacility'] != :undef -%>
 <%  raise Puppet::ParseError, "DefaultFacility must be an Integer or a String" unless ( @module_args['DefaultFacility'].is_a? Integer or @module_args['DefaultFacility'].is_a? String ) -%>
 <%  raise Puppet::ParseError, "DefaultFacility must be a facility name or number" unless scope.function_is_facility([ @module_args['DefaultFacilit'] ]) -%>
-DefaultFacility="<%= @module_args['DefaultFacility'] %>"
+ DefaultFacility="<%= @module_args['DefaultFacility'] %>"
 <%end -%>
