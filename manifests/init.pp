@@ -23,6 +23,7 @@ class rsyslogv8 (
   $log_user                       = $rsyslogv8::params::log_user,
   $log_group                      = $rsyslogv8::params::log_group,
   $pin_packages                   = $rsyslogv8::params::pin_packages,
+  $defaults_file                  = $rsyslogv8::params::defaults_file,
   $ssl                            = false,
   $ssl_ca                         = undef,
   $ssl_cert                       = undef,

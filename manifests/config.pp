@@ -1,4 +1,12 @@
 class rsyslogv8::config {
+  file { $rsyslogv8::defaults_file:
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    content => template("${module_name}/defaults_file.erb"),
+    require => Class['rsyslogv8::install'],
+  }
+
   file { $rsyslogv8::rsyslog_d:
     ensure  => directory,
     owner   => 'root',

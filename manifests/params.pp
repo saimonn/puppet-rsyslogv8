@@ -24,6 +24,7 @@ class rsyslogv8::params {
       $_family_log_user             = undef
       $_family_log_group            = undef
       $_family_pin_packages         = undef
+      $_family_defaults_file        = '/etc/default/rsyslog'
       case $::operatingsystem {
         'Debian': {
           $_os_family_manage_repo          = true
@@ -201,6 +202,7 @@ class rsyslogv8::params {
       $_family_log_user             = undef
       $_family_log_group            = undef
       $_family_pin_packages         = undef
+      $_family_defaults_file        = '/etc/sysconfig/rsyslog'
 
       case $::operatingsystem {
         'Redhat', 'CentOS': {
@@ -397,5 +399,8 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_family_pin_packages,
                                       false
                                     )
-
+  $defaults_file                   = pick(
+                                      $::rsyslogv8::params::_family_defaults_file,
+                                      undef
+                                    )
 }
