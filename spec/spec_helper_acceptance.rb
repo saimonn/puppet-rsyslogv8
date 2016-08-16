@@ -20,6 +20,10 @@ hosts.each do |host|
     install_package host, 'epel-release'
   end
   install_package host, 'git'
+  if host['platform'] =~ /^el-7-/
+    # image changed openssl is no longer available
+    install_package host, 'openssl'
+  end
 
   on host, "puppet cert generate $(facter fqdn)"
 end
