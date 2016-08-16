@@ -9,7 +9,7 @@ PuppetLint::RakeTask.new :lint do |config|
 end
 
 PuppetSyntax.exclude_paths = ["spec/fixtures/**/*.pp", "vendor/**/*"]
-MetadataJsonLint::options[:no-strict-license] = 
+MetadataJsonLint::options[:strict_license] = false
 
 # Publishing tasks
 unless RUBY_VERSION =~ /^1\./
