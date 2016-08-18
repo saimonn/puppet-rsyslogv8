@@ -176,6 +176,21 @@ class rsyslogv8::params {
               $_version_os_family_umask                = undef
               $_version_os_family_pin_packages         = undef
             }
+            '16.04': {
+              $_version_os_family_manage_repo          = false
+              $_version_os_family_repo_data            = {}
+              $_version_os_family_relp_package_name    = undef
+              $_version_os_family_rsyslog_package_name = undef
+              $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_umask                = undef
+              $_version_os_family_pin_packages         = undef
+            }
             default: {
               fail("Unsupported operatingsystemmajrelease (${::operatingsystem}) ${::operatingsystemmajrelease}")
             }
