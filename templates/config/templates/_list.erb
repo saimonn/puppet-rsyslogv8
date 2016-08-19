@@ -1,0 +1,34 @@
+<%raise Puppet::ParseError, "must define the list in a list template #{@template['name']}" unless @template.fetch('list', nil) and @template['list'] != :undef -%>
+<%raise Puppet::ParseError, "template list must be a Array of Hashes in template #{@template['name']}" unless @template['list'].is_a? Array -%>
+) {
+<%@template['list'].each_with_index do | element, idx | -%>
+<%  raise Puppet::ParseError, "element number #{idx} is not a Hash in template #{@template['name']}" unless element.is_a? Hash -%>
+<%  raise Puppet::ParseError, "element number #{idx} is has no type in template #{@template['name']}" unless element.fetch('type') and element['type'] != :undef -%>
+<%
+    case element['type']
+      when 'property'
+        raise Puppet::ParseError, "property element number #{idx} has no property name in template #{@template['name']}" unless element.fetch('name') and element['name'] != :undef
+-%>
+  property(name="<%= element['name'] %>"
+<%
+        element.each_key do  | key |
+          if key != 'type' and key != 'name'
+-%>
+  <%= key %>="<%=element[key] %>"
+<%
+          end
+        end
+-%>
+  )
+<%
+      when 'constant'
+        raise Puppet::ParseError, "constant element number #{idx} has no value in template #{@template['name']}" unless element.fetch('value') and element['value'] != :undef
+-%>
+  constant(value="<%= element['value'] %>")
+<%
+      else
+        raise Puppet::ParseError, "element number #{idx} has unknown type #{@template['list'][idx]['type']} in template #{@template['name']}"
+    end
+-%>
+<%end -%>
+}

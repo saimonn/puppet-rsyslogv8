@@ -6,6 +6,28 @@ describe 'rsyslogv8' do
       class { 'rsyslogv8':
         modules_extras => { 'omrelp' => {} },
       }
+      rsyslogv8::config::templates { 'test':
+        templates => [
+          {
+            'name' => 'test1',
+            'type' => 'list',
+            'list' => [
+              {
+                'type' => 'constant',
+                'value' => 'test',
+              },
+              {
+                'type' => 'property',
+                'name' => 'syslogfacility-text',
+                'regex.nomatchmode' => 'DFLT',
+                'regex.match' => "0",
+                # quadruple escaping rspec...
+                'regex.expression' => '(^[^\\\\\\\\.]*)',
+              }
+            ]
+          }
+        ]
+      }
       rsyslogv8::config::ruleset { 'test':
         actions => [
           {
@@ -103,6 +125,7 @@ describe 'rsyslogv8' do
             'name'     => 'local2',
             'type'     => 'omfile',
             'file'     => 'localhost2',
+            'template' => 'test1',
             'selector' => '&',
           },
           {

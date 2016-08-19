@@ -9,5 +9,4 @@ template(
   name="<%= @templates[i]['name'] %>"
   type="<%= @templates[i]['type'] %>"
 <%=  scope.function_sub_template_call(["rsyslogv8/config/templates/_#{@templates[i]['type']}.erb", {'template' => @templates[i] }]) -%>
-)
 <% end -%>
