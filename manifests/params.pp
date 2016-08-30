@@ -14,6 +14,7 @@ class rsyslogv8::params {
       $_family_relp_package_name    = undef
       $_family_rsyslog_package_name = undef
       $_family_gnutls_package_name  = undef
+      $_family_kafka_package_name   = undef
       $_family_run_user             = undef
       $_family_run_group            = undef
       $_family_spool_dir            = undef
@@ -39,6 +40,7 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_kafka_package_name   = undef
           $_os_family_run_user             = undef
           $_os_family_run_group            = undef
           $_os_family_spool_dir            = undef
@@ -57,6 +59,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = false
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -72,6 +75,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = false
+              $_version_os_family_kafka_package_name   = false
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -93,6 +97,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -134,6 +139,7 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_kafka_package_name   = false
           $_os_family_run_user             = 'syslog'
           $_os_family_run_group            = 'syslog'
           $_os_family_spool_dir            = undef
@@ -152,6 +158,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -167,6 +174,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = false
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -182,6 +190,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -207,6 +216,7 @@ class rsyslogv8::params {
       $_family_relp_package_name    = undef
       $_family_rsyslog_package_name = undef
       $_family_gnutls_package_name  = undef
+      $_family_kafka_package_name   = undef
       $_family_run_user             = undef
       $_family_run_group            = undef
       $_family_spool_dir            = '/var/lib/rsyslog'
@@ -233,6 +243,7 @@ class rsyslogv8::params {
           $_os_family_relp_package_name    = undef
           $_os_family_rsyslog_package_name = undef
           $_os_family_gnutls_package_name  = undef
+          $_os_family_kafka_package_name   = undef
           $_os_family_run_user             = undef
           $_os_family_run_group            = undef
           $_os_family_spool_dir            = undef
@@ -245,12 +256,29 @@ class rsyslogv8::params {
           $_os_family_pin_packages         = undef
 
           case $::operatingsystemmajrelease {
-            '5', '6': {
+            '5': {
               $_version_os_family_manage_repo          = undef
               $_version_os_family_repo_data            = undef
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = false
+              $_version_os_family_run_user             = undef
+              $_version_os_family_run_group            = undef
+              $_version_os_family_spool_dir            = undef
+              $_version_os_family_modules              = undef
+              $_version_os_family_perm_file            = undef
+              $_version_os_family_perm_dir             = undef
+              $_version_os_family_umask                = undef
+              $_version_os_family_pin_packages         = undef
+            }
+            '6': {
+              $_version_os_family_manage_repo          = undef
+              $_version_os_family_repo_data            = undef
+              $_version_os_family_relp_package_name    = undef
+              $_version_os_family_rsyslog_package_name = undef
+              $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -266,6 +294,7 @@ class rsyslogv8::params {
               $_version_os_family_relp_package_name    = undef
               $_version_os_family_rsyslog_package_name = undef
               $_version_os_family_gnutls_package_name  = undef
+              $_version_os_family_kafka_package_name   = undef
               $_version_os_family_run_user             = undef
               $_version_os_family_run_group            = undef
               $_version_os_family_spool_dir            = undef
@@ -329,6 +358,12 @@ class rsyslogv8::params {
                                       $::rsyslogv8::params::_os_family_gnutls_package_name,
                                       $::rsyslogv8::params::_family_gnutls_package_name,
                                       'rsyslog-gnutls'
+                                    )
+  $kafka_package_name             = pick(
+                                      $::rsyslogv8::params::_version_os_family_kafka_package_name,
+                                      $::rsyslogv8::params::_os_family_kafka_package_name,
+                                      $::rsyslogv8::params::_family_kafka_package_name,
+                                      'rsyslog-kafka'
                                     )
   $relp_package_name              = pick(
                                       $::rsyslogv8::params::_version_os_family_relp_package_name,
