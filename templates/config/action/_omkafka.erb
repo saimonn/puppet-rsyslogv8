@@ -22,25 +22,21 @@
   if @action.fetch('topicConfParam', nil) != nil and @action.fetch('topicConfParam', nil) != :undef
     raise Puppet::ParseError, "topicConfParam parameter must be an non empty Array of String in action #{@action.fetch('name', @title)}" unless @action['topicConfParam'].is_a?(Array) or @action['topicConfParam'].length > 0    
 -%>
-  topicConfParam=[<%
-    @action['topicConfParam'].each_index do |idx|
--%>
+  topicConfParam=[
+<%  @action['topicConfParam'].each_index do |idx| -%>
     "<%= @action['topicConfParam'][idx] %>"<%= idx == ( @action['topicConfParam'].length - 1) ? '' : ',' %>
-<%
-    end
-%>  ]
+<% end -%>
+  ]
 <%end -%>
 <%
   if @action.fetch('confParam', nil) != nil and @action.fetch('confParam', nil) != :undef
     raise Puppet::ParseError, "confParam parameter must be an non empty Array of String in action #{@action.fetch('name', @title)}" unless @action['confParam'].is_a?(Array) or @action['confParam'].length > 0    
 -%>
-  confParam=[<%
-    @action['confParam'].each_index do |idx|
--%>
+  confParam=[
+<%  @action['confParam'].each_index do |idx| -%>
     "<%= @action['confParam'][idx] %>"<%= idx == ( @action['confParam'].length - 1) ? '' : ',' %>
-<%
-    end
-%>  ]
+<%  end -%>
+  ]
 <%end -%>
 <%if @action.fetch('template', nil) and @action['template'] != :undef -%>
 <%  raise Puppet::ParseError, "template parameter must be a String in action #{@action.fetch('name', @title)}" unless @action['template'].is_a?(String) -%>
@@ -48,16 +44,14 @@
 <%end -%>
 <%if @action.fetch('broker', nil) -%>
 <%  raise Puppet::ParseError, "broker parameter must be an non empty Array of String '<hostname | ip >:<port>' in action #{@action.fetch('name', @title)}" unless @action['broker'].is_a?(Array) or @action['broker'].length > 0 -%>
-  broker=[<%
-    @action['broker'].each_index do | idx |
-%>
+  broker=[
+<%  @action['broker'].each_index do | idx | -%>
     "<%= @action['broker'][idx] %>"<%= idx == (@action['broker'].length - 1)? '' : ',' %>
-<%
-    end
-%>  ]
-<%else %>
+<%  end -%>
+  ]
+<%else -%>
   broker=[ "localhost:9092" ]
-<%end%>
+<%end -%>
 <%if @action.fetch('key', nil) -%>
 <%  raise Puppet::ParseError, "key parameter must be an String in action #{@action.fetch('name', @title)}" unless @action['key'].is_a?(String) -%>
   key="<%= @action['key'] %>"
