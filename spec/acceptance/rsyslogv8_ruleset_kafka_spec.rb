@@ -59,7 +59,7 @@ describe 'rsyslogv8' do
             'topic' => 'foo',
             'partitions.number' => 3,
             'errorFile' => '/var/log/error.log',
-            'brokers' => [ 'test1:9092', 'test2:9092', 'test3:9092' ],
+            'broker' => [ 'test1:9092', 'test2:9092', 'test3:9092' ],
             'comment' => 'This is a one-line comment',
             'queue' => {
               'type' => 'LinkedList',
