@@ -24,4 +24,12 @@ class rsyslogv8::install {
     }
   }
 
+  if $rsyslogv8::kafka_package_name != false {
+    package { $rsyslogv8::kafka_package_name:
+      ensure  => $rsyslogv8::package_status,
+      notify  => Class['rsyslogv8::service'],
+      require => Class['rsyslogv8::repository'],
+    }
+  }
+
 }

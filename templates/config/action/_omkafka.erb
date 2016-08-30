@@ -1,0 +1,78 @@
+<%raise Puppet::ParseError, "target is not set for action #{@action.fetch('name', @title)}" unless @action.fetch('topic', nil) -%>
+  topic="<%= @action['topic'] %>"
+<%if @action.fetch('dynatopic', nil) and @action['dynatopic'] != :undef -%>
+<%  raise Puppet::ParseError, "dynatopic must be a Boolean for action #{@action.fetch('name', @title)}" unless scope.function_is_bool([ @action['dynatopic'] ]) -%>
+  dynatopic="<%= @action['dynatopic'] ? 'on' : 'off' %>"
+<%  if @action.fetch('dynatopic.cachesize', nil) and @action['dynatopic.cachesize'] != :undef -%>
+<%  raise Puppet::ParseError, "dynatopic.cachesize must be an Integer for action #{@action.fetch('name', @title)}" unless scope.function_is_integer([ @action['dynatopic.cachesize'] ]) -%>
+  dynatopic.cachesize="<%= @action['dynatopic.cachesize']%>"
+<%  else -%>
+  dynatopic.cachesize="50"
+<%  end -%>
+<%else -%>
+  dynatopic="off"
+<%end-%>
+<%if @action.fetch('closeTimeout', nil) and @action['closeTimeout'] != :undef -%>
+<%  raise Puppet::ParseError, "closeTimeout must be an Integer for action #{@action.fetch('name', @title)}" unless scope.function_is_integer([ @action['closeTimeout'] ]) -%>
+  closeTimeout="<%= @action['closeTimeout'] %>"
+<%else -%>
+  closeTimeout="2000"
+<%end -%>
+<%
+  if @action.fetch('topicConfParam', nil) != nil and @action.fetch('topicConfParam', nil) != :undef
+    raise Puppet::ParseError, "topicConfParam parameter must be an non empty Array of String in action #{@action.fetch('name', @title)}" unless @action['topicConfParam'].is_a?(Array) or @action['topicConfParam'].length > 0    
+-%>
+  topicConfParam=[<%
+    @action['topicConfParam'].each_index do |idx|
+-%>
+    "<%= @action['topicConfParam'][idx] %>"<%= idx == ( @action['topicConfParam'].length - 1) ? '' : ',' %>
+<%
+    end
+%>  ]
+<%end -%>
+<%
+  if @action.fetch('confParam', nil) != nil and @action.fetch('confParam', nil) != :undef
+    raise Puppet::ParseError, "confParam parameter must be an non empty Array of String in action #{@action.fetch('name', @title)}" unless @action['confParam'].is_a?(Array) or @action['confParam'].length > 0    
+-%>
+  confParam=[<%
+    @action['confParam'].each_index do |idx|
+-%>
+    "<%= @action['confParam'][idx] %>"<%= idx == ( @action['confParam'].length - 1) ? '' : ',' %>
+<%
+    end
+%>  ]
+<%end -%>
+<%if @action.fetch('template', nil) and @action['template'] != :undef -%>
+<%  raise Puppet::ParseError, "template parameter must be a String in action #{@action.fetch('name', @title)}" unless @action['template'].is_a?(String) -%>
+  template="<%= @action['template'] %>"
+<%end -%>
+<%if @action.fetch('broker', nil) -%>
+<%  raise Puppet::ParseError, "broker parameter must be an non empty Array of String '<hostname | ip >:<port>' in action #{@action.fetch('name', @title)}" unless @action['broker'].is_a?(Array) or @action['broker'].length > 0 -%>
+  broker=[<%
+    @action['broker'].each_index do | idx |
+%>
+    "<%= @action['broker'][idx] %>"<%= idx == (@action['broker'].length - 1)? '' : ',' %>
+<%
+    end
+%>  ]
+<%else %>
+  broker=[ "localhost:9092" ]
+<%end%>
+<%if @action.fetch('key', nil) -%>
+<%  raise Puppet::ParseError, "key parameter must be an String in action #{@action.fetch('name', @title)}" unless @action['key'].is_a?(String) -%>
+  key="<%= @action['key'] %>"
+<%end -%>
+<%if @action.fetch('partitions.auto', nil) -%>
+<%  raise Puppet::ParseError, "partitions.auto must be a Boolean for action #{@action.fetch('name', @title)}" unless scope.function_is_bool([ @action['partitions.auto'] ]) -%>
+  partitions.auto="<%= @action['partitions.auto'] ? 'on' : 'off' %>"
+<%else -%>
+  partitions.auto="off"
+<%end -%>
+<%if @action.fetch('partitions.number', nil) -%>
+<%  raise Puppet::ParseError, "partitions.number must be an Integer for action #{@action.fetch('name', @title)}" unless scope.function_is_integer([ @action['partitions.number'] ]) -%>
+  partitions.number="<%= @action['partitions.number'] %>"
+<%end -%>
+<%if @action.fetch('errorFile', nil) -%>
+<%  raise Puppet::ParseError, "errorFile parameter must be a String in action #{@action.fetch('name', @title)}" unless @action['errorFile'].is_a?(String) -%>
+  errorFile="<%= @action['errorFile'] %>"
+<%end -%>
