@@ -302,7 +302,7 @@ class rsyslogv8::params {
                                         'imuxsock'  => {
                                           'comment'   => 'provides support for local system logging',
                                           'arguments' => {
-                                            'SysSock.Use'                => 'off',
+                                            'SysSock.Use'                => false,
                                             'SysSock.RateLimit.Interval' => 1,
                                             'SysSock.RateLimit.Burst'    => 100,
                                           },

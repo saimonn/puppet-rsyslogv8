@@ -10,3 +10,7 @@
 <%  raise Puppet::ParseError, "SysSock.Name must be a String" unless @module_args['SysSock.Name'].is_a? String -%>
  SysSock.Name="<%= @module_args['SysSock.Name'] %>"
 <%end -%>
+<%if @module_args.fetch('SysSock.Use', nil)!= nil and @module_args['SysSock.Use'] != :undef  -%>
+<%  raise Puppet::ParseError, "SysSock.Use must be a Boolean" unless scope.function_is_bool([ @module_args['SysSock.Use'] ]) -%>
+ SysSock.Use="<%= @module_args['SysSock.Use'] or @module_args['SysSock.Use'] == 'true' ? 'on' : 'off' %>"
+<%end -%>
