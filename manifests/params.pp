@@ -112,6 +112,7 @@ class rsyslogv8::params {
                   'rsyslog',
                   'rsyslog-gnutls',
                   'rsyslog-relp',
+                  'librelp0',
                   'rsyslog-mysql',
                   'rsyslog-pgsql',
                   'rsyslog-mongodb',
